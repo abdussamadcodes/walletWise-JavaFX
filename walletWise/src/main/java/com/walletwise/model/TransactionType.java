@@ -1,4 +1,6 @@
 package com.walletwise.model;
 
-public class TransactionType {
+public enum TransactionType {
+    INCOME,
+    EXPENSE
 }
