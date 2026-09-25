@@ -2,29 +2,32 @@ package com.walletwise;
 
 import com.walletwise.dao.DatabaseInitializer;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class App extends Application {
 
     @Override
     public void init() throws Exception {
-        // The init() method runs before the UI starts. Perfect for DB setup.
         DatabaseInitializer.initialize();
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        Label label = new Label("Phase 2: Database Connected!");
-        label.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainLayout.fxml"));
+        Parent root = loader.load();
 
-        StackPane root = new StackPane(label);
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root);
 
         primaryStage.setTitle("WalletWise - Personal Finance Manager");
         primaryStage.setScene(scene);
+
+        // APP CONSTRAINTS: Prevents the user from breaking the UI by shrinking it too much
+        primaryStage.setMinWidth(700);
+        primaryStage.setMinHeight(400);
+
         primaryStage.show();
     }
 

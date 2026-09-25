@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<!-- FIX: Changed prefWidth to 800 and prefHeight to 500 so it fits your laptop screen -->
+<BorderPane fx:id="rootPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.walletwise.controller.MainController"
+            prefWidth="800" prefHeight="500">
+
+    <left>
+        <!-- ... the rest of your FXML code stays exactly the same ... -->
+        <!-- ADDED fx:id="sidebar" and removed hardcoded prefWidth -->
+        <VBox fx:id="sidebar" spacing="15" style="-fx-background-color: #2c3e50;">
+            <padding><Insets top="30" right="15" bottom="20" left="15"/></padding>
+
+            <Label text="WalletWise" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;">
+                <VBox.margin>
+                    <Insets bottom="20"/>
+                </VBox.margin>
+            </Label>
+
+            <Button text="Dashboard" onAction="#showDashboard" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-alignment: center-left; -fx-cursor: hand;"/>
+            <Button text="Transactions" onAction="#showTransactions" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-alignment: center-left; -fx-cursor: hand;"/>
+            <Button text="Budget" onAction="#showBudget" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-alignment: center-left; -fx-cursor: hand;"/>
+            <Button text="Currency" onAction="#showCurrency" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-alignment: center-left; -fx-cursor: hand;"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;">
+            <Label text="Welcome to WalletWise!" style="-fx-font-size: 28px; -fx-text-fill: #7f8c8d;"/>
+        </StackPane>
+    </center>
+
+</BorderPane>
