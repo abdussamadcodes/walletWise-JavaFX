@@ -54,8 +54,9 @@ public class MainController {
         loadPage("TransactionsLayout.fxml");
     }
     @FXML
-    private void showBudget() { setContent("Budget View (Coming in Phase 10)"); }
-
+    private void showBudget() {
+        loadPage("BudgetLayout.fxml");
+    }
     @FXML
     private void showCurrency() { setContent("Currency Converter (Coming in Phase 13)"); }
 

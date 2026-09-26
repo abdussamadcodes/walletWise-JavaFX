@@ -47,33 +47,56 @@ public class TransactionsController {
     @FXML
     public void initialize() {
         setupTableColumns();
-        setupDatePickers();
+
+        // FIX: Make the filter date pickers robust for typing
+        makeDatePickerTypable(startDatePicker);
+        makeDatePickerTypable(endDatePicker);
 
         typeFilterCombo.setItems(FXCollections.observableArrayList("All Types", "Income", "Expense"));
         typeFilterCombo.setValue("All Types");
 
         loadTransactions();
 
-        // Listeners for live filtering
         searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         typeFilterCombo.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
     }
 
-    private void setupDatePickers() {
-        StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
+    // --- FIX: Method to make DatePickers accept manual typing smoothly ---
+    private void makeDatePickerTypable(DatePicker picker) {
+        picker.setConverter(new StringConverter<LocalDate>() {
             @Override
             public String toString(LocalDate date) {
                 return (date != null) ? dateFormatter.format(date) : "";
             }
             @Override
             public LocalDate fromString(String string) {
-                return (string != null && !string.isEmpty()) ? LocalDate.parse(string, dateFormatter) : null;
+                if (string != null && !string.trim().isEmpty()) {
+                    try {
+                        return LocalDate.parse(string.trim(), dateFormatter);
+                    } catch (Exception e) {
+                        return picker.getValue();
+                    }
+                }
+                return null;
             }
-        };
-        startDatePicker.setConverter(converter);
-        endDatePicker.setConverter(converter);
+        });
+
+        picker.getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                try {
+                    String text = picker.getEditor().getText();
+                    if (text == null || text.trim().isEmpty()) {
+                        picker.setValue(null);
+                    } else {
+                        picker.setValue(LocalDate.parse(text.trim(), dateFormatter));
+                    }
+                } catch (Exception e) {
+                    picker.getEditor().setText(picker.getConverter().toString(picker.getValue()));
+                }
+            }
+        });
     }
 
     private void setupTableColumns() {
@@ -107,34 +130,17 @@ public class TransactionsController {
         LocalDate endDate = endDatePicker.getValue();
 
         filteredData.setPredicate(transaction -> {
-            // 1. Check Type (Income/Expense)
-            if (filterType != null && !filterType.equals("All Types") && !transaction.getType().equals(filterType)) {
-                return false;
-            }
+            if (filterType != null && !filterType.equals("All Types") && !transaction.getType().equals(filterType)) return false;
 
-            // 2. Check Date Range
             LocalDate txDate = transaction.getDate();
-            if (startDate != null && txDate.isBefore(startDate)) {
-                return false; // Happened before our start date
-            }
-            if (endDate != null && txDate.isAfter(endDate)) {
-                return false; // Happened after our end date
-            }
+            if (startDate != null && txDate.isBefore(startDate)) return false;
+            if (endDate != null && txDate.isAfter(endDate)) return false;
 
-            // 3. Check Search Box (ID, Category, or Description)
-            if (searchText.isEmpty()) {
-                return true;
-            }
+            if (searchText.isEmpty()) return true;
 
-            if (String.valueOf(transaction.getId()).equals(searchText)) {
-                return true; // Exact ID match
-            }
-            if (transaction.getCategoryName().toLowerCase().contains(searchText)) {
-                return true;
-            }
-            if (transaction.getDescription() != null && transaction.getDescription().toLowerCase().contains(searchText)) {
-                return true;
-            }
+            if (String.valueOf(transaction.getId()).equals(searchText)) return true;
+            if (transaction.getCategoryName().toLowerCase().contains(searchText)) return true;
+            if (transaction.getDescription() != null && transaction.getDescription().toLowerCase().contains(searchText)) return true;
 
             return false;
         });
@@ -148,7 +154,6 @@ public class TransactionsController {
         typeFilterCombo.setValue("All Types");
         startDatePicker.setValue(null);
         endDatePicker.setValue(null);
-        // The listeners will automatically re-trigger applyFilters()
     }
 
     private void updateRecordCount() {

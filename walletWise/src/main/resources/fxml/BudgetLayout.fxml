@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" style="-fx-background-color: #ecf0f1; -fx-padding: 30;"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.walletwise.controller.BudgetController">
+
+    <Label text="Monthly Budget Planner" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <!-- Set Budget Form -->
+    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+        <Label text="Category:" style="-fx-font-size: 14px;"/>
+        <ComboBox fx:id="categoryCombo" prefWidth="200" promptText="Select Category"/>
+
+        <Label text="Monthly Limit ($):" style="-fx-font-size: 14px;"/>
+        <TextField fx:id="limitField" promptText="0.00" prefWidth="150"/>
+
+        <Button text="Set Budget" onAction="#handleSetBudget"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+        <Button text="Remove Budget" onAction="#handleRemoveBudget"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+
+        <Label fx:id="messageLabel" style="-fx-text-fill: #e74c3c; -fx-padding: 0 0 0 10;"/>
+    </HBox>
+
+    <!-- Budget Tracking Table -->
+    <TableView fx:id="budgetTable" VBox.vgrow="ALWAYS" style="-fx-font-size: 14px;">
+        <columns>
+            <TableColumn fx:id="categoryCol" text="Category" prefWidth="150" />
+            <TableColumn fx:id="limitCol" text="Limit" prefWidth="100" />
+            <TableColumn fx:id="spentCol" text="Spent" prefWidth="100" />
+            <TableColumn fx:id="remainingCol" text="Remaining" prefWidth="100" />
+            <TableColumn fx:id="progressCol" text="Usage Progress" prefWidth="250" />
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
+
+</VBox>

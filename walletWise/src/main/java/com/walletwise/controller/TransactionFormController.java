@@ -29,7 +29,6 @@ public class TransactionFormController {
     private final TransactionDAO transactionDAO = new TransactionDAO();
     private final CategoryDAO categoryDAO = new CategoryDAO();
 
-    // Define the custom date format (Day-Month-Year)
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     @FXML
@@ -38,26 +37,65 @@ public class TransactionFormController {
 
         List<Category> categories = categoryDAO.getAll();
         List<String> categoryNames = new ArrayList<>();
+
         for (Category c : categories) {
-            if (!categoryNames.contains(c.getName())) {
-                categoryNames.add(c.getName());
+            // Clean the name as it comes out of the database
+            String cleanName = formatCategoryName(c.getName());
+
+            // Check if we already added a matching name (ignoring uppercase/lowercase)
+            boolean alreadyAdded = false;
+            for (String existing : categoryNames) {
+                if (existing.equalsIgnoreCase(cleanName)) {
+                    alreadyAdded = true;
+                    break;
+                }
+            }
+
+            // Only add it to the dropdown if it's not a duplicate
+            if (!alreadyAdded) {
+                categoryNames.add(cleanName);
             }
         }
+
         categoryCombo.setItems(FXCollections.observableArrayList(categoryNames));
 
-        // FIX: Force the DatePicker to use DD-MM-YYYY format
-        datePicker.setConverter(new StringConverter<LocalDate>() {
+        makeDatePickerTypable(datePicker);
+        datePicker.setValue(LocalDate.now());
+    }
+
+    private void makeDatePickerTypable(DatePicker picker) {
+        picker.setConverter(new StringConverter<LocalDate>() {
             @Override
             public String toString(LocalDate date) {
                 return (date != null) ? dateFormatter.format(date) : "";
             }
             @Override
             public LocalDate fromString(String string) {
-                return (string != null && !string.isEmpty()) ? LocalDate.parse(string, dateFormatter) : null;
+                if (string != null && !string.trim().isEmpty()) {
+                    try {
+                        return LocalDate.parse(string.trim(), dateFormatter);
+                    } catch (Exception e) {
+                        return picker.getValue();
+                    }
+                }
+                return null;
             }
         });
 
-        datePicker.setValue(LocalDate.now());
+        picker.getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                try {
+                    String text = picker.getEditor().getText();
+                    if (text == null || text.trim().isEmpty()) {
+                        picker.setValue(null);
+                    } else {
+                        picker.setValue(LocalDate.parse(text.trim(), dateFormatter));
+                    }
+                } catch (Exception e) {
+                    picker.getEditor().setText(picker.getConverter().toString(picker.getValue()));
+                }
+            }
+        });
     }
 
     public void setTransaction(Transaction t) {
@@ -69,6 +107,13 @@ public class TransactionFormController {
         datePicker.setValue(t.getDate());
         descField.setText(t.getDescription());
         categoryCombo.setValue(t.getCategoryName());
+    }
+
+    // --- NEW HELPER: Formats "food" into "Food" ---
+    private String formatCategoryName(String rawName) {
+        if (rawName == null || rawName.isEmpty()) return rawName;
+        // Capitalize first letter, lowercase the rest
+        return rawName.substring(0, 1).toUpperCase() + rawName.substring(1).toLowerCase();
     }
 
     @FXML
@@ -83,11 +128,23 @@ public class TransactionFormController {
 
             double amount = Double.parseDouble(amountField.getText());
             String type = typeCombo.getValue();
-            String categoryName = categoryCombo.getValue().trim();
+
+            // FIX: Apply the formatting to the category name right here
+            String categoryName = formatCategoryName(categoryCombo.getValue().trim());
+
             LocalDate date = datePicker.getValue();
             String desc = descField.getText();
 
-            if (!categoryCombo.getItems().contains(categoryName)) {
+            // Ignore case when checking if category already exists
+            boolean categoryExists = false;
+            for (String item : categoryCombo.getItems()) {
+                if (item.equalsIgnoreCase(categoryName)) {
+                    categoryExists = true;
+                    break;
+                }
+            }
+
+            if (!categoryExists) {
                 categoryDAO.add(new Category(categoryName, type));
             }
 
