@@ -58,7 +58,9 @@ public class MainController {
         loadPage("BudgetLayout.fxml");
     }
     @FXML
-    private void showCurrency() { setContent("Currency Converter (Coming in Phase 13)"); }
+    private void showCurrency() {
+        loadPage("CurrencyLayout.fxml");
+    }
 
     private void setContent(String text) {
         contentArea.getChildren().clear();

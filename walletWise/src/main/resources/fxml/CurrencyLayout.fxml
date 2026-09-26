@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" style="-fx-background-color: #ecf0f1; -fx-padding: 30;"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.walletwise.controller.CurrencyController">
+
+    <Label text="Currency Exchange" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <VBox spacing="20" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4); -fx-max-width: 600;">
+
+        <GridPane hgap="15" vgap="15">
+            <Label text="Amount:" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #34495e;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="amountField" promptText="Enter amount..." prefWidth="250" style="-fx-font-size: 14px;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+            <Label text="From Currency:" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #34495e;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="fromCurrencyCombo" prefWidth="250" style="-fx-font-size: 14px;" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="To Currency:" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #34495e;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="toCurrencyCombo" prefWidth="250" style="-fx-font-size: 14px;" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        </GridPane>
+
+        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10 0 0 0;">
+            <Button text="Convert Currency" onAction="#handleConvert"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand;"/>
+            <Label fx:id="errorLabel" style="-fx-text-fill: #e74c3c; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <!-- Result Display Area -->
+        <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-margin-top: 10;">
+            <Label text="Converted Amount" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"/>
+            <Label fx:id="resultLabel" text="0.00" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+            <Label fx:id="rateInfoLabel" style="-fx-font-size: 13px; -fx-text-fill: #95a5a6;"/>
+        </VBox>
+
+    </VBox>
+</VBox>
