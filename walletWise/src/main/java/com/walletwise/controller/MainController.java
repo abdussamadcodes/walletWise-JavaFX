@@ -9,8 +9,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.beans.binding.Bindings;
 
-import java.io.IOException;
-
 public class MainController {
 
     @FXML private BorderPane rootPane;
@@ -19,25 +17,30 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        // Sidebar resizing constraints
         sidebar.prefWidthProperty().bind(
                 Bindings.min(250, Bindings.max(150, rootPane.widthProperty().multiply(0.22)))
         );
-
-        // Load the Dashboard automatically when the app starts!
         showDashboard();
     }
 
-    // --- Helper Method to load FXML pages ---
+    // --- UPDATED METHOD TO SHOW EXACT ERRORS ---
     private void loadPage(String fxmlFileName) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFileName));
             Parent view = loader.load();
             contentArea.getChildren().clear();
             contentArea.getChildren().add(view);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            setContent("Error loading page: " + fxmlFileName);
+
+            // Get the deepest cause of the error
+            Throwable cause = e;
+            while (cause.getCause() != null) {
+                cause = cause.getCause();
+            }
+
+            // Show the exact error on the screen!
+            setContent("Crash Reason:\n" + cause.toString());
         }
     }
 
@@ -55,11 +58,10 @@ public class MainController {
     @FXML
     private void showCurrency() { setContent("Currency Converter (Coming in Phase 13)"); }
 
-    // Fallback method for views we haven't built yet
     private void setContent(String text) {
         contentArea.getChildren().clear();
         Label label = new Label(text);
-        label.setStyle("-fx-font-size: 24px; -fx-text-fill: #34495e;");
+        label.setStyle("-fx-font-size: 18px; -fx-text-fill: #e74c3c; -fx-padding: 20; -fx-wrap-text: true;");
         contentArea.getChildren().add(label);
     }
 }
