@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" style="-fx-background-color: #ecf0f1; -fx-padding: 30;"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.walletwise.controller.TransactionsController">
+
+    <Label text="Transaction History" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <!-- TableView automatically expands to fill available height using VBox.vgrow -->
+    <TableView fx:id="transactionTable" VBox.vgrow="ALWAYS" style="-fx-font-size: 14px;">
+        <columns>
+            <TableColumn fx:id="idCol" text="ID" prefWidth="50" />
+            <TableColumn fx:id="dateCol" text="Date" prefWidth="120" />
+            <TableColumn fx:id="typeCol" text="Type" prefWidth="100" />
+            <TableColumn fx:id="categoryCol" text="Category" prefWidth="150" />
+            <TableColumn fx:id="amountCol" text="Amount" prefWidth="120" />
+            <TableColumn fx:id="descCol" text="Description" prefWidth="200" />
+        </columns>
+        <!-- This forces the columns to stretch nicely across the window -->
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
+
+    <!-- Action Buttons -->
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <Button text="Add Transaction" onAction="#handleAdd"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand;"/>
+        <Button text="Edit Transaction" onAction="#handleEdit"
+                style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand;"/>
+        <Button text="Delete Transaction" onAction="#handleDelete"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-cursor: hand;"/>
+
+        <!-- A label to show success/error messages -->
+        <Label fx:id="messageLabel" style="-fx-font-size: 14px; -fx-text-fill: #e74c3c; -fx-padding: 0 0 0 20;"/>
+    </HBox>
+
+</VBox>

@@ -50,8 +50,9 @@ public class MainController {
     }
 
     @FXML
-    private void showTransactions() { setContent("Transactions View (Coming in Phase 7)"); }
-
+    private void showTransactions() {
+        loadPage("TransactionsLayout.fxml");
+    }
     @FXML
     private void showBudget() { setContent("Budget View (Coming in Phase 10)"); }
 
