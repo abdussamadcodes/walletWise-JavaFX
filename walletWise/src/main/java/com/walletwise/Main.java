@@ -1,6 +1,7 @@
 package com.walletwise;
 
 import com.walletwise.dao.SettingsDAO;
+import com.walletwise.util.BackupUtil;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,30 +16,35 @@ public class Main extends Application {
         String savedPasscode = settingsDAO.getSetting("app_passcode");
 
         Parent root;
-        // Check if a passcode exists in the database
         if (savedPasscode != null && !savedPasscode.isEmpty()) {
-            // App is locked, load the Login Screen
             root = FXMLLoader.load(getClass().getResource("/fxml/LoginLayout.fxml"));
             primaryStage.setTitle("WalletWise - Locked");
             primaryStage.setScene(new Scene(root, 500, 400));
             primaryStage.setResizable(false);
         } else {
-            // No passcode set, go straight to the Main Dashboard
             root = FXMLLoader.load(getClass().getResource("/fxml/MainLayout.fxml"));
             primaryStage.setTitle("WalletWise - Personal Finance Manager");
 
-            // 1. SET SMALLER DEFAULT "RESTORE DOWN" SIZE (Width: 950, Height: 600)
             primaryStage.setScene(new Scene(root, 950, 600));
-
-            // 2. LOWER THE MINIMUM CONSTRAINTS FOR MORE FLEXIBILITY
             primaryStage.setMinWidth(850);
             primaryStage.setMinHeight(550);
-
-            // 3. START MAXIMIZED
             primaryStage.setMaximized(true);
         }
 
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        SettingsDAO settingsDAO = new SettingsDAO();
+        String autoBackup = settingsDAO.getSetting("auto_backup");
+
+        if ("true".equals(autoBackup)) {
+            System.out.println("Auto-backup is enabled. Backing up database...");
+            BackupUtil.createBackup();
+        }
+
+        super.stop();
     }
 
     public static void main(String[] args) {

@@ -29,7 +29,8 @@ import java.util.stream.Collectors;
 
 public class SettingsController {
 
-    // --- SECURITY FIELDS ---
+    // --- SECURITY & BACKUP FIELDS ---
+    @FXML private CheckBox autoBackupCheck;
     @FXML private PasswordField currentPassField;
     @FXML private PasswordField passField1;
     @FXML private PasswordField passField2;
@@ -81,6 +82,14 @@ public class SettingsController {
         previewTable.setItems(sortedData);
 
         updateFilteredPreview();
+
+        // Load Auto-Backup Preference
+        String backupSetting = settingsDAO.getSetting("auto_backup");
+        autoBackupCheck.setSelected("true".equals(backupSetting));
+
+        autoBackupCheck.setOnAction(e -> {
+            settingsDAO.saveSetting("auto_backup", autoBackupCheck.isSelected() ? "true" : "false");
+        });
 
         searchField.textProperty().addListener((obs, oldV, newV) -> updateFilteredPreview());
         typeFilterCombo.valueProperty().addListener((obs, oldV, newV) -> updateFilteredPreview());
@@ -281,7 +290,6 @@ public class SettingsController {
         }
     }
 
-    // --- SECURITY METHODS ---
     @FXML
     private void handleSavePasscode() {
         String currentPass = currentPassField.getText();
@@ -290,7 +298,6 @@ public class SettingsController {
 
         String savedHash = settingsDAO.getSetting("app_passcode");
 
-        // 1. Verify current passcode if one already exists
         if (savedHash != null && !savedHash.isEmpty()) {
             if (currentPass == null || currentPass.isEmpty()) {
                 securityStatusLabel.setText("Please enter your current passcode to change it.");
@@ -305,14 +312,12 @@ public class SettingsController {
             }
         }
 
-        // 2. Validate new passcode is not empty
         if (p1 == null || p1.isEmpty()) {
             securityStatusLabel.setText("New passcode cannot be empty.");
             securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
             return;
         }
 
-        // 3. Check password constraints
         String validationErrors = validatePasswordConstraints(p1);
         if (validationErrors != null) {
             securityStatusLabel.setText(validationErrors);
@@ -320,14 +325,12 @@ public class SettingsController {
             return;
         }
 
-        // 4. Confirm new passcodes match
         if (!p1.equals(p2)) {
             securityStatusLabel.setText("New passcodes do not match!");
             securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
             return;
         }
 
-        // 5. Save the new passcode
         String hashedPassword = SecurityUtil.hashPassword(p1);
         settingsDAO.saveSetting("app_passcode", hashedPassword);
 
@@ -370,7 +373,6 @@ public class SettingsController {
         securityStatusLabel.setStyle("-fx-text-fill: #f39c12;");
     }
 
-    // --- HELPER METHOD: Validates strict password constraints ---
     private String validatePasswordConstraints(String password) {
         StringBuilder errors = new StringBuilder();
 
