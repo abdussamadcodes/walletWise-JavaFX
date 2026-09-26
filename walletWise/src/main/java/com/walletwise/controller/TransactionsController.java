@@ -1,6 +1,8 @@
 package com.walletwise.controller;
 
+import com.walletwise.dao.CategoryDAO;
 import com.walletwise.dao.TransactionDAO;
+import com.walletwise.model.Category;
 import com.walletwise.model.Transaction;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -19,6 +21,7 @@ import javafx.util.StringConverter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionsController {
@@ -33,12 +36,14 @@ public class TransactionsController {
 
     @FXML private TextField searchField;
     @FXML private ComboBox<String> typeFilterCombo;
+    @FXML private ComboBox<String> categoryFilterCombo; // NEW Dropdown
     @FXML private DatePicker startDatePicker;
     @FXML private DatePicker endDatePicker;
     @FXML private Label recordCountLabel;
     @FXML private Label messageLabel;
 
     private final TransactionDAO transactionDAO = new TransactionDAO();
+    private final CategoryDAO categoryDAO = new CategoryDAO(); // NEW DAO
     private ObservableList<Transaction> transactionList;
     private FilteredList<Transaction> filteredData;
 
@@ -48,22 +53,56 @@ public class TransactionsController {
     public void initialize() {
         setupTableColumns();
 
-        // FIX: Make the filter date pickers robust for typing
         makeDatePickerTypable(startDatePicker);
         makeDatePickerTypable(endDatePicker);
 
         typeFilterCombo.setItems(FXCollections.observableArrayList("All Types", "Income", "Expense"));
         typeFilterCombo.setValue("All Types");
 
+        // Load categories into the new filter
+        loadCategoryFilter();
+
         loadTransactions();
 
+        // Listeners for live filtering
         searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         typeFilterCombo.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
+        categoryFilterCombo.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
     }
 
-    // --- FIX: Method to make DatePickers accept manual typing smoothly ---
+    // --- UPDATED TO SCAN TRANSACTIONS TOO ---
+    private void loadCategoryFilter() {
+        List<String> cats = new ArrayList<>();
+        cats.add("All Categories");
+
+        // 1. Scan Category Table
+        for (Category c : categoryDAO.getAll()) {
+            addUniqueCategory(cats, c.getName());
+        }
+
+        // 2. Scan Transaction Table
+        for (Transaction t : transactionDAO.getAll()) {
+            addUniqueCategory(cats, t.getCategoryName());
+        }
+
+        categoryFilterCombo.setItems(FXCollections.observableArrayList(cats));
+        if (categoryFilterCombo.getValue() == null) {
+            categoryFilterCombo.setValue("All Categories");
+        }
+    }
+
+    // --- NEW HELPER METHOD ---
+    private void addUniqueCategory(List<String> list, String rawName) {
+        if (rawName == null || rawName.trim().isEmpty()) return;
+        String cleanName = rawName.substring(0, 1).toUpperCase() + rawName.substring(1).toLowerCase().trim();
+        for (String existing : list) {
+            if (existing.equalsIgnoreCase(cleanName)) return;
+        }
+        list.add(cleanName);
+    }
+
     private void makeDatePickerTypable(DatePicker picker) {
         picker.setConverter(new StringConverter<LocalDate>() {
             @Override
@@ -73,11 +112,8 @@ public class TransactionsController {
             @Override
             public LocalDate fromString(String string) {
                 if (string != null && !string.trim().isEmpty()) {
-                    try {
-                        return LocalDate.parse(string.trim(), dateFormatter);
-                    } catch (Exception e) {
-                        return picker.getValue();
-                    }
+                    try { return LocalDate.parse(string.trim(), dateFormatter); }
+                    catch (Exception e) { return picker.getValue(); }
                 }
                 return null;
             }
@@ -126,11 +162,15 @@ public class TransactionsController {
     private void applyFilters() {
         String searchText = searchField.getText() == null ? "" : searchField.getText().toLowerCase().trim();
         String filterType = typeFilterCombo.getValue();
+        String filterCategory = categoryFilterCombo.getValue();
         LocalDate startDate = startDatePicker.getValue();
         LocalDate endDate = endDatePicker.getValue();
 
         filteredData.setPredicate(transaction -> {
             if (filterType != null && !filterType.equals("All Types") && !transaction.getType().equals(filterType)) return false;
+
+            // NEW: Filter by Category Dropdown
+            if (filterCategory != null && !filterCategory.equals("All Categories") && !transaction.getCategoryName().equalsIgnoreCase(filterCategory)) return false;
 
             LocalDate txDate = transaction.getDate();
             if (startDate != null && txDate.isBefore(startDate)) return false;
@@ -139,8 +179,8 @@ public class TransactionsController {
             if (searchText.isEmpty()) return true;
 
             if (String.valueOf(transaction.getId()).equals(searchText)) return true;
-            if (transaction.getCategoryName().toLowerCase().contains(searchText)) return true;
             if (transaction.getDescription() != null && transaction.getDescription().toLowerCase().contains(searchText)) return true;
+            // Removed category from text search since we have a dedicated dropdown now!
 
             return false;
         });
@@ -152,6 +192,7 @@ public class TransactionsController {
     private void handleClearFilters() {
         searchField.clear();
         typeFilterCombo.setValue("All Types");
+        categoryFilterCombo.setValue("All Categories");
         startDatePicker.setValue(null);
         endDatePicker.setValue(null);
     }
@@ -178,6 +219,7 @@ public class TransactionsController {
             stage.showAndWait();
 
             loadTransactions();
+            loadCategoryFilter(); // REFRESH filter in case they added a new category!
             messageLabel.setText("");
             applyFilters();
 

@@ -12,9 +12,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ProgressBarTableCell;
+import javafx.scene.layout.StackPane;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,60 +54,127 @@ public class BudgetController {
             return new SimpleStringProperty(remaining < 0 ? String.format("-$%.2f", Math.abs(remaining)) : String.format("$%.2f", remaining));
         });
 
-        // This turns the double value (0.0 to 1.0) into a visual Progress Bar!
-        progressCol.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getProgress()).asObject());
-        progressCol.setCellFactory(ProgressBarTableCell.forTableColumn());
+        progressCol.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getProgressRatio()).asObject());
+        progressCol.setCellFactory(column -> new TableCell<BudgetDTO, Double>() {
+            private final ProgressBar progressBar = new ProgressBar();
+            private final Label label = new Label();
+            private final StackPane stackPane = new StackPane(progressBar, label);
+
+            {
+                progressBar.setMaxWidth(Double.MAX_VALUE);
+                progressBar.setPrefHeight(18);
+                label.setStyle("-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 11px;");
+            }
+
+            @Override
+            protected void updateItem(Double progress, boolean empty) {
+                super.updateItem(progress, empty);
+                if (empty || progress == null) {
+                    setGraphic(null);
+                } else {
+                    progressBar.setProgress(Math.min(progress, 1.0));
+                    label.setText(String.format("%.1f%%", progress * 100));
+
+                    if (progress >= 1.0) {
+                        progressBar.setStyle("-fx-accent: #e74c3c;");
+                    } else if (progress >= 0.8) {
+                        progressBar.setStyle("-fx-accent: #f39c12;");
+                    } else {
+                        progressBar.setStyle("-fx-accent: #27ae60;");
+                    }
+                    setGraphic(stackPane);
+                }
+            }
+        });
     }
 
+    // --- NEW HELPER METHOD TO PREVENT DUPLICATES ---
+    private void addUniqueCategory(List<String> list, String rawName) {
+        if (rawName == null || rawName.trim().isEmpty()) return;
+        String cleanName = rawName.substring(0, 1).toUpperCase() + rawName.substring(1).toLowerCase().trim();
+        for (String existing : list) {
+            if (existing.equalsIgnoreCase(cleanName)) return;
+        }
+        list.add(cleanName);
+    }
+
+    // --- UPDATED TO SCAN TRANSACTIONS TOO ---
     private void loadCategories() {
-        List<String> expenseCategories = categoryDAO.getAll().stream()
-                .filter(c -> c.getType().equals("Expense"))
-                .map(Category::getName)
-                .collect(Collectors.toList());
+        List<String> expenseCategories = new ArrayList<>();
+
+        // 1. Scan Category Table
+        for (Category c : categoryDAO.getAll()) {
+            if (c.getType().equalsIgnoreCase("Expense")) {
+                addUniqueCategory(expenseCategories, c.getName());
+            }
+        }
+
+        // 2. Scan Transaction Table (Catches orphaned categories like "Study product")
+        for (Transaction t : transactionDAO.getAll()) {
+            if (t.getType() != null && t.getType().equalsIgnoreCase("Expense")) {
+                addUniqueCategory(expenseCategories, t.getCategoryName());
+            }
+        }
+
         categoryCombo.setItems(FXCollections.observableArrayList(expenseCategories));
     }
 
     private void loadBudgetData() {
-        ObservableList<BudgetDTO> displayList = FXCollections.observableArrayList();
-        List<Budget> budgets = budgetDAO.getAll();
+        try {
+            ObservableList<BudgetDTO> displayList = FXCollections.observableArrayList();
+            List<Budget> budgets = budgetDAO.getAll();
+            LocalDate now = LocalDate.now();
 
-        // Get all transactions for the CURRENT MONTH
-        LocalDate now = LocalDate.now();
-        List<Transaction> currentMonthTxs = transactionDAO.getAll().stream()
-                .filter(t -> t.getType().equals("Expense"))
-                .filter(t -> t.getDate().getMonth() == now.getMonth() && t.getDate().getYear() == now.getYear())
-                .collect(Collectors.toList());
+            List<Transaction> currentMonthTxs = transactionDAO.getAll().stream()
+                    .filter(t -> t.getType() != null && t.getType().equalsIgnoreCase("Expense"))
+                    .filter(t -> {
+                        LocalDate d = t.getDate();
+                        return d != null && d.getMonth() == now.getMonth() && d.getYear() == now.getYear();
+                    })
+                    .collect(Collectors.toList());
 
-        // Calculate spent amount for each budget
-        for (Budget b : budgets) {
-            double spent = currentMonthTxs.stream()
-                    .filter(t -> t.getCategoryName().equalsIgnoreCase(b.getCategoryName()))
-                    .mapToDouble(Transaction::getAmount)
-                    .sum();
-
-            displayList.add(new BudgetDTO(b.getCategoryName(), b.getLimitAmount(), spent));
+            for (Budget b : budgets) {
+                double spent = currentMonthTxs.stream()
+                        .filter(t -> t.getCategoryName() != null && t.getCategoryName().equalsIgnoreCase(b.getCategoryName()))
+                        .mapToDouble(Transaction::getAmount)
+                        .sum();
+                displayList.add(new BudgetDTO(b.getCategoryName(), b.getLimitAmount(), spent));
+            }
+            budgetTable.setItems(displayList);
+            budgetTable.refresh();
+        } catch (Exception e) {
+            showMessage("Crash loading data: " + e.getMessage(), false);
         }
-
-        budgetTable.setItems(displayList);
     }
 
     @FXML
     private void handleSetBudget() {
         try {
-            String category = categoryCombo.getValue();
-            if (category == null || limitField.getText().isEmpty()) {
-                showMessage("Select a category and enter a limit.", false);
+            String rawCategory = categoryCombo.getValue();
+            if (rawCategory == null || rawCategory.trim().isEmpty() || limitField.getText().isEmpty()) {
+                showMessage("Select or type a category and enter a limit.", false);
                 return;
             }
+            String category = rawCategory.substring(0, 1).toUpperCase() + rawCategory.substring(1).toLowerCase().trim();
             double limit = Double.parseDouble(limitField.getText());
 
-            budgetDAO.saveOrUpdate(new Budget(category, limit));
+            boolean exists = false;
+            for (String item : categoryCombo.getItems()) {
+                if (item.equalsIgnoreCase(category)) { exists = true; break; }
+            }
+            if (!exists) {
+                categoryDAO.add(new Category(category, "Expense"));
+                categoryCombo.getItems().add(category);
+            }
 
+            budgetDAO.saveOrUpdate(new Budget(category, limit));
             limitField.clear();
             showMessage("Budget saved!", true);
-            loadBudgetData(); // Refresh table
+            loadBudgetData();
         } catch (NumberFormatException e) {
             showMessage("Invalid amount format.", false);
+        } catch (SQLException e) {
+            showMessage("Database Error: " + e.getMessage(), false);
         }
     }
 
@@ -113,9 +182,13 @@ public class BudgetController {
     private void handleRemoveBudget() {
         BudgetDTO selected = budgetTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            budgetDAO.delete(selected.getCategory());
-            loadBudgetData();
-            showMessage("Budget removed.", true);
+            try {
+                budgetDAO.delete(selected.getCategory());
+                loadBudgetData();
+                showMessage("Budget removed.", true);
+            } catch (SQLException e) {
+                showMessage("Database Error: " + e.getMessage(), false);
+            }
         } else {
             showMessage("Select a budget from the table to remove.", false);
         }
@@ -126,27 +199,20 @@ public class BudgetController {
         messageLabel.setStyle(success ? "-fx-text-fill: #27ae60;" : "-fx-text-fill: #e74c3c;");
     }
 
-    // --- Inner DTO (Data Transfer Object) Class for the TableView ---
-    // This is an advanced OOP concept your teacher will love.
     public static class BudgetDTO {
         private final String category;
         private final double limit;
         private final double spent;
-
         public BudgetDTO(String category, double limit, double spent) {
-            this.category = category;
-            this.limit = limit;
-            this.spent = spent;
+            this.category = category; this.limit = limit; this.spent = spent;
         }
-
         public String getCategory() { return category; }
         public double getLimit() { return limit; }
         public double getSpent() { return spent; }
         public double getRemaining() { return limit - spent; }
-
-        public double getProgress() {
-            double progress = spent / limit;
-            return Math.min(progress, 1.0); // Caps at 1.0 (100%) so the bar doesn't break if over budget
+        public double getProgressRatio() {
+            if (limit <= 0) return 0;
+            return spent / limit;
         }
     }
 }

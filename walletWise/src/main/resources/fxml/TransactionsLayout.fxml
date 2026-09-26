@@ -10,12 +10,14 @@
 
     <Label text="Transaction History" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
 
-    <!-- Filter Section (Stacked neatly) -->
     <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;">
-        <!-- Row 1: Text Search and Type -->
+        <!-- Row 1: Search, Type, and NEW CATEGORY FILTER -->
         <HBox spacing="15" alignment="CENTER_LEFT">
-            <TextField fx:id="searchField" promptText="Search by ID, Category, or Description..." prefWidth="300" style="-fx-font-size: 14px; -fx-padding: 5;"/>
-            <ComboBox fx:id="typeFilterCombo" prefWidth="150" style="-fx-font-size: 14px;"/>
+            <TextField fx:id="searchField" promptText="Search by ID or Description..." prefWidth="250" style="-fx-font-size: 14px; -fx-padding: 5;"/>
+            <ComboBox fx:id="typeFilterCombo" prefWidth="130" style="-fx-font-size: 14px;"/>
+
+            <!-- NEW: Dynamic Category Dropdown Filter -->
+            <ComboBox fx:id="categoryFilterCombo" prefWidth="150" style="-fx-font-size: 14px;"/>
 
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="recordCountLabel" text="0 records found" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d; -fx-font-weight: bold;"/>

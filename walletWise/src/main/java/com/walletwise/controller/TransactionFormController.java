@@ -35,32 +35,32 @@ public class TransactionFormController {
     public void initialize() {
         typeCombo.setItems(FXCollections.observableArrayList("Income", "Expense"));
 
-        List<Category> categories = categoryDAO.getAll();
         List<String> categoryNames = new ArrayList<>();
 
-        for (Category c : categories) {
-            // Clean the name as it comes out of the database
-            String cleanName = formatCategoryName(c.getName());
+        // 1. Scan Category Table
+        for (Category c : categoryDAO.getAll()) {
+            addUniqueCategory(categoryNames, c.getName());
+        }
 
-            // Check if we already added a matching name (ignoring uppercase/lowercase)
-            boolean alreadyAdded = false;
-            for (String existing : categoryNames) {
-                if (existing.equalsIgnoreCase(cleanName)) {
-                    alreadyAdded = true;
-                    break;
-                }
-            }
-
-            // Only add it to the dropdown if it's not a duplicate
-            if (!alreadyAdded) {
-                categoryNames.add(cleanName);
-            }
+        // 2. Scan Transaction Table
+        for (Transaction t : transactionDAO.getAll()) {
+            addUniqueCategory(categoryNames, t.getCategoryName());
         }
 
         categoryCombo.setItems(FXCollections.observableArrayList(categoryNames));
 
         makeDatePickerTypable(datePicker);
         datePicker.setValue(LocalDate.now());
+    }
+
+    // --- NEW HELPER METHOD ---
+    private void addUniqueCategory(List<String> list, String rawName) {
+        if (rawName == null || rawName.trim().isEmpty()) return;
+        String cleanName = rawName.substring(0, 1).toUpperCase() + rawName.substring(1).toLowerCase().trim();
+        for (String existing : list) {
+            if (existing.equalsIgnoreCase(cleanName)) return;
+        }
+        list.add(cleanName);
     }
 
     private void makeDatePickerTypable(DatePicker picker) {

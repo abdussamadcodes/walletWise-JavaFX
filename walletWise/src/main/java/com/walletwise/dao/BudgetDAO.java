@@ -9,7 +9,8 @@ public class BudgetDAO {
     private final String URL = "jdbc:sqlite:walletwise.db";
 
     public BudgetDAO() {
-        String sql = "CREATE TABLE IF NOT EXISTS budgets (" +
+        // FIX: Changed table name to 'budget_limits' to bypass the corrupted old table
+        String sql = "CREATE TABLE IF NOT EXISTS budget_limits (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "category_name TEXT UNIQUE NOT NULL, " +
                 "limit_amount REAL NOT NULL)";
@@ -21,16 +22,14 @@ public class BudgetDAO {
         }
     }
 
-    // FIX: Bulletproof Check-and-Save logic
-    public void saveOrUpdate(Budget budget) {
-        String checkSql = "SELECT count(*) FROM budgets WHERE category_name = ?";
-        String updateSql = "UPDATE budgets SET limit_amount = ? WHERE category_name = ?";
-        String insertSql = "INSERT INTO budgets(category_name, limit_amount) VALUES(?, ?)";
+    public void saveOrUpdate(Budget budget) throws SQLException {
+        String checkSql = "SELECT count(*) FROM budget_limits WHERE category_name = ?";
+        String updateSql = "UPDATE budget_limits SET limit_amount = ? WHERE category_name = ?";
+        String insertSql = "INSERT INTO budget_limits(category_name, limit_amount) VALUES(?, ?)";
 
         try (Connection conn = DriverManager.getConnection(URL)) {
             boolean exists = false;
 
-            // 1. Check if budget for this category already exists
             try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
                 checkStmt.setString(1, budget.getCategoryName());
                 ResultSet rs = checkStmt.executeQuery();
@@ -39,7 +38,6 @@ public class BudgetDAO {
                 }
             }
 
-            // 2. Either Update or Insert
             if (exists) {
                 try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
                     updateStmt.setDouble(1, budget.getLimitAmount());
@@ -53,14 +51,12 @@ public class BudgetDAO {
                     insertStmt.executeUpdate();
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
     public List<Budget> getAll() {
         List<Budget> budgets = new ArrayList<>();
-        String sql = "SELECT * FROM budgets";
+        String sql = "SELECT * FROM budget_limits";
         try (Connection conn = DriverManager.getConnection(URL);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -73,14 +69,12 @@ public class BudgetDAO {
         return budgets;
     }
 
-    public void delete(String categoryName) {
-        String sql = "DELETE FROM budgets WHERE category_name = ?";
+    public void delete(String categoryName) throws SQLException {
+        String sql = "DELETE FROM budget_limits WHERE category_name = ?";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, categoryName);
             pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }
