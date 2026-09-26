@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.walletwise.dao.CategoryDAO;
+import com.walletwise.dao.SettingsDAO;
 import com.walletwise.dao.TransactionDAO;
 import com.walletwise.model.Category;
 import com.walletwise.model.Transaction;
+import com.walletwise.util.SecurityUtil;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,6 +31,13 @@ import java.util.stream.Collectors;
 
 public class SettingsController {
 
+    // --- SECURITY FIELDS (Moved safely inside the class) ---
+    @FXML private PasswordField passField1;
+    @FXML private PasswordField passField2;
+    @FXML private Label securityStatusLabel;
+    private final SettingsDAO settingsDAO = new SettingsDAO();
+
+    // --- EXPORT/IMPORT FIELDS ---
     @FXML private TextField searchField;
     @FXML private ComboBox<String> typeFilterCombo;
     @FXML private ComboBox<String> categoryFilterCombo;
@@ -94,7 +103,6 @@ public class SettingsController {
         descCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
     }
 
-    // FIX: Using robust typing logic for DatePickers to prevent loop misfires
     private void makeDatePickerTypable(DatePicker picker) {
         picker.setConverter(new StringConverter<LocalDate>() {
             @Override
@@ -155,7 +163,6 @@ public class SettingsController {
     }
 
     private void updateFilteredPreview() {
-        // FIX: Platform.runLater prevents UI event storms and TableView jumping
         Platform.runLater(() -> {
             String query = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
             String selectedType = typeFilterCombo.getValue();
@@ -287,6 +294,39 @@ public class SettingsController {
                 importStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
             }
         }
+    }
+
+    // --- SECURITY METHODS ---
+    @FXML
+    private void handleSavePasscode() {
+        String p1 = passField1.getText();
+        String p2 = passField2.getText();
+
+        if (p1 == null || p1.isEmpty()) {
+            securityStatusLabel.setText("Passcode cannot be empty.");
+            securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+            return;
+        }
+        if (!p1.equals(p2)) {
+            securityStatusLabel.setText("Passcodes do not match!");
+            securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+            return;
+        }
+
+        String hashedPassword = SecurityUtil.hashPassword(p1);
+        settingsDAO.saveSetting("app_passcode", hashedPassword);
+
+        passField1.clear();
+        passField2.clear();
+        securityStatusLabel.setText("Passcode saved successfully! App is now locked.");
+        securityStatusLabel.setStyle("-fx-text-fill: #27ae60;");
+    }
+
+    @FXML
+    private void handleRemovePasscode() {
+        settingsDAO.deleteSetting("app_passcode");
+        securityStatusLabel.setText("Passcode removed. App is now unlocked.");
+        securityStatusLabel.setStyle("-fx-text-fill: #f39c12;");
     }
 
     public static class TransactionExportDTO {

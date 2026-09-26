@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox alignment="CENTER" spacing="20" style="-fx-background-color: #2c3e50; -fx-padding: 40;"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.walletwise.controller.LoginController">
+
+    <Label text="WalletWise" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #ecf0f1;"/>
+    <Label text="Please enter your passcode to continue" style="-fx-font-size: 14px; -fx-text-fill: #bdc3c7; -fx-padding: 0 0 20 0;"/>
+
+    <PasswordField fx:id="passcodeField" promptText="Enter Passcode..." maxWidth="250" style="-fx-font-size: 16px; -fx-padding: 10; -fx-alignment: center;"/>
+
+    <Button text="Unlock Application" onAction="#handleLogin" defaultButton="true"
+            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 30; -fx-cursor: hand;"/>
+
+    <Label fx:id="errorLabel" style="-fx-text-fill: #e74c3c; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+</VBox>

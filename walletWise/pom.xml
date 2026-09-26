@@ -35,7 +35,7 @@
             <version>3.42.0.0</version>
         </dependency>
 
-        <!-- Jackson for Frankfurter API JSON parsing -->
+        <!-- Jackson for JSON parsing -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -44,6 +44,18 @@
     </dependencies>
 
     <build>
+        <!-- ADDED: Forces Maven to copy your FXML files into the target folder -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                    <include>**/*.json</include>
+                    <include>**/*.db</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
