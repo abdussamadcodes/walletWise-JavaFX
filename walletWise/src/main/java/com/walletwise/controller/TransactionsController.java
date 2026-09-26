@@ -6,15 +6,16 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -30,29 +31,57 @@ public class TransactionsController {
     @FXML private TableColumn<Transaction, String> amountCol;
     @FXML private TableColumn<Transaction, String> descCol;
 
+    @FXML private TextField searchField;
+    @FXML private ComboBox<String> typeFilterCombo;
+    @FXML private DatePicker startDatePicker;
+    @FXML private DatePicker endDatePicker;
+    @FXML private Label recordCountLabel;
     @FXML private Label messageLabel;
 
     private final TransactionDAO transactionDAO = new TransactionDAO();
     private ObservableList<Transaction> transactionList;
+    private FilteredList<Transaction> filteredData;
+
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     @FXML
     public void initialize() {
         setupTableColumns();
+        setupDatePickers();
+
+        typeFilterCombo.setItems(FXCollections.observableArrayList("All Types", "Income", "Expense"));
+        typeFilterCombo.setValue("All Types");
+
         loadTransactions();
+
+        // Listeners for live filtering
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
+        typeFilterCombo.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
+        startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
+        endDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
     }
 
-
+    private void setupDatePickers() {
+        StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                return (date != null) ? dateFormatter.format(date) : "";
+            }
+            @Override
+            public LocalDate fromString(String string) {
+                return (string != null && !string.isEmpty()) ? LocalDate.parse(string, dateFormatter) : null;
+            }
+        };
+        startDatePicker.setConverter(converter);
+        endDatePicker.setConverter(converter);
+    }
 
     private void setupTableColumns() {
         idCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getId()));
-
-        // FIX: Formatting the Table column to show DD-MM-YYYY
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         dateCol.setCellValueFactory(cellData -> {
             LocalDate date = cellData.getValue().getDate();
-            return new SimpleStringProperty(date != null ? formatter.format(date) : "");
+            return new SimpleStringProperty(date != null ? dateFormatter.format(date) : "");
         });
-
         typeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType()));
         categoryCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategoryName()));
         amountCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("$%.2f", cellData.getValue().getAmount())));
@@ -62,16 +91,75 @@ public class TransactionsController {
     private void loadTransactions() {
         List<Transaction> list = transactionDAO.getAll();
         transactionList = FXCollections.observableArrayList(list);
-        transactionTable.setItems(transactionList);
+
+        filteredData = new FilteredList<>(transactionList, b -> true);
+        SortedList<Transaction> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(transactionTable.comparatorProperty());
+
+        transactionTable.setItems(sortedData);
+        updateRecordCount();
     }
 
-    // --- NEW METHOD: Opens the Add/Edit Popup Window ---
+    private void applyFilters() {
+        String searchText = searchField.getText() == null ? "" : searchField.getText().toLowerCase().trim();
+        String filterType = typeFilterCombo.getValue();
+        LocalDate startDate = startDatePicker.getValue();
+        LocalDate endDate = endDatePicker.getValue();
+
+        filteredData.setPredicate(transaction -> {
+            // 1. Check Type (Income/Expense)
+            if (filterType != null && !filterType.equals("All Types") && !transaction.getType().equals(filterType)) {
+                return false;
+            }
+
+            // 2. Check Date Range
+            LocalDate txDate = transaction.getDate();
+            if (startDate != null && txDate.isBefore(startDate)) {
+                return false; // Happened before our start date
+            }
+            if (endDate != null && txDate.isAfter(endDate)) {
+                return false; // Happened after our end date
+            }
+
+            // 3. Check Search Box (ID, Category, or Description)
+            if (searchText.isEmpty()) {
+                return true;
+            }
+
+            if (String.valueOf(transaction.getId()).equals(searchText)) {
+                return true; // Exact ID match
+            }
+            if (transaction.getCategoryName().toLowerCase().contains(searchText)) {
+                return true;
+            }
+            if (transaction.getDescription() != null && transaction.getDescription().toLowerCase().contains(searchText)) {
+                return true;
+            }
+
+            return false;
+        });
+
+        updateRecordCount();
+    }
+
+    @FXML
+    private void handleClearFilters() {
+        searchField.clear();
+        typeFilterCombo.setValue("All Types");
+        startDatePicker.setValue(null);
+        endDatePicker.setValue(null);
+        // The listeners will automatically re-trigger applyFilters()
+    }
+
+    private void updateRecordCount() {
+        recordCountLabel.setText(filteredData.size() + " records found");
+    }
+
     private void openTransactionForm(Transaction transaction) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TransactionForm.fxml"));
             Parent root = loader.load();
 
-            // Pass the selected transaction to the popup controller
             TransactionFormController controller = loader.getController();
             if (transaction != null) {
                 controller.setTransaction(transaction);
@@ -80,15 +168,13 @@ public class TransactionsController {
             Stage stage = new Stage();
             stage.setTitle(transaction == null ? "Add Transaction" : "Edit Transaction");
             stage.setScene(new Scene(root));
-
-            // This forces the user to interact with the popup before clicking the main window again
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
-            stage.showAndWait(); // Pauses code execution here until the popup is closed
+            stage.showAndWait();
 
-            // Automatically refresh the table after the popup closes!
             loadTransactions();
-            messageLabel.setText(""); // Clear old messages
+            messageLabel.setText("");
+            applyFilters();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,15 +184,13 @@ public class TransactionsController {
     }
 
     @FXML
-    private void handleAdd() {
-        openTransactionForm(null); // Passing null tells it to create a NEW transaction
-    }
+    private void handleAdd() { openTransactionForm(null); }
 
     @FXML
     private void handleEdit() {
         Transaction selected = transactionTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            openTransactionForm(selected); // Passes the selected data to the popup
+            openTransactionForm(selected);
         } else {
             messageLabel.setText("Please select a transaction to edit.");
             messageLabel.setStyle("-fx-text-fill: #e74c3c;");
@@ -121,6 +205,7 @@ public class TransactionsController {
             transactionList.remove(selected);
             messageLabel.setText("Transaction deleted successfully.");
             messageLabel.setStyle("-fx-text-fill: #27ae60;");
+            updateRecordCount();
         } else {
             messageLabel.setText("Please select a transaction to delete first.");
             messageLabel.setStyle("-fx-text-fill: #e74c3c;");
