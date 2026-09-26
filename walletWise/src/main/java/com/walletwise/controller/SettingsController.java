@@ -31,7 +31,8 @@ import java.util.stream.Collectors;
 
 public class SettingsController {
 
-    // --- SECURITY FIELDS (Moved safely inside the class) ---
+    // --- SECURITY FIELDS ---
+    @FXML private PasswordField currentPassField;
     @FXML private PasswordField passField1;
     @FXML private PasswordField passField2;
     @FXML private Label securityStatusLabel;
@@ -299,23 +300,54 @@ public class SettingsController {
     // --- SECURITY METHODS ---
     @FXML
     private void handleSavePasscode() {
+        String currentPass = currentPassField.getText();
         String p1 = passField1.getText();
         String p2 = passField2.getText();
 
-        if (p1 == null || p1.isEmpty()) {
-            securityStatusLabel.setText("Passcode cannot be empty.");
-            securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
-            return;
+        String savedHash = settingsDAO.getSetting("app_passcode");
+
+        // 1. Verify current passcode if one already exists
+        if (savedHash != null && !savedHash.isEmpty()) {
+            if (currentPass == null || currentPass.isEmpty()) {
+                securityStatusLabel.setText("Please enter your current passcode to change it.");
+                securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+                return;
+            }
+            String currentHash = SecurityUtil.hashPassword(currentPass);
+            if (!currentHash.equals(savedHash)) {
+                securityStatusLabel.setText("Current passcode is incorrect.");
+                securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+                return;
+            }
         }
-        if (!p1.equals(p2)) {
-            securityStatusLabel.setText("Passcodes do not match!");
+
+        // 2. Validate new passcode is not empty
+        if (p1 == null || p1.isEmpty()) {
+            securityStatusLabel.setText("New passcode cannot be empty.");
             securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
             return;
         }
 
+        // 3. Check password constraints
+        String validationErrors = validatePasswordConstraints(p1);
+        if (validationErrors != null) {
+            securityStatusLabel.setText(validationErrors);
+            securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+            return;
+        }
+
+        // 4. Confirm new passcodes match
+        if (!p1.equals(p2)) {
+            securityStatusLabel.setText("New passcodes do not match!");
+            securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+            return;
+        }
+
+        // 5. Save the new passcode
         String hashedPassword = SecurityUtil.hashPassword(p1);
         settingsDAO.saveSetting("app_passcode", hashedPassword);
 
+        currentPassField.clear();
         passField1.clear();
         passField2.clear();
         securityStatusLabel.setText("Passcode saved successfully! App is now locked.");
@@ -324,9 +356,57 @@ public class SettingsController {
 
     @FXML
     private void handleRemovePasscode() {
+        String currentPass = currentPassField.getText();
+        String savedHash = settingsDAO.getSetting("app_passcode");
+
+        if (savedHash == null || savedHash.isEmpty()) {
+            securityStatusLabel.setText("No passcode is currently set.");
+            securityStatusLabel.setStyle("-fx-text-fill: #f39c12;");
+            return;
+        }
+
+        if (currentPass == null || currentPass.isEmpty()) {
+            securityStatusLabel.setText("Please enter your current passcode to remove it.");
+            securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+            return;
+        }
+
+        String currentHash = SecurityUtil.hashPassword(currentPass);
+        if (!currentHash.equals(savedHash)) {
+            securityStatusLabel.setText("Current passcode is incorrect.");
+            securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+            return;
+        }
+
         settingsDAO.deleteSetting("app_passcode");
+        currentPassField.clear();
+        passField1.clear();
+        passField2.clear();
         securityStatusLabel.setText("Passcode removed. App is now unlocked.");
         securityStatusLabel.setStyle("-fx-text-fill: #f39c12;");
+    }
+
+    // --- HELPER METHOD: Validates strict password constraints ---
+    private String validatePasswordConstraints(String password) {
+        StringBuilder errors = new StringBuilder();
+
+        if (password.length() < 8) {
+            errors.append("- At least 8 characters long\n");
+        }
+        if (!password.matches(".*[a-zA-Z].*")) {
+            errors.append("- At least one letter\n");
+        }
+        if (!password.matches(".*\\d.*")) {
+            errors.append("- At least one digit (0-9)\n");
+        }
+        if (!password.matches(".*[^a-zA-Z0-9].*")) {
+            errors.append("- At least one special character\n");
+        }
+
+        if (errors.length() > 0) {
+            return "Passcode missing constraints:\n" + errors.toString().trim();
+        }
+        return null; // Null means no errors, password is valid
     }
 
     public static class TransactionExportDTO {
