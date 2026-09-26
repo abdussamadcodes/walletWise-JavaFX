@@ -3,11 +3,10 @@ package com.walletwise.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.walletwise.dao.CategoryDAO;
 import com.walletwise.dao.SettingsDAO;
 import com.walletwise.dao.TransactionDAO;
-import com.walletwise.model.Category;
 import com.walletwise.model.Transaction;
+import com.walletwise.util.CategoryUtil;
 import com.walletwise.util.SecurityUtil;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -24,7 +23,6 @@ import javafx.util.StringConverter;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -57,7 +55,6 @@ public class SettingsController {
     @FXML private TableColumn<Transaction, String> descCol;
 
     private final TransactionDAO transactionDAO = new TransactionDAO();
-    private final CategoryDAO categoryDAO = new CategoryDAO();
     private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
@@ -137,25 +134,9 @@ public class SettingsController {
     }
 
     private void loadCategories() {
-        List<String> categories = new ArrayList<>();
-        categories.add("All Categories");
-        for (Category c : categoryDAO.getAll()) {
-            addUnique(categories, c.getName());
-        }
-        for (Transaction t : transactionDAO.getAll()) {
-            addUnique(categories, t.getCategoryName());
-        }
-        categoryFilterCombo.setItems(FXCollections.observableArrayList(categories));
+        List<String> categories = CategoryUtil.getAllUniqueCategories(true);
+        CategoryUtil.makeAutoComplete(categoryFilterCombo, categories);
         categoryFilterCombo.setValue("All Categories");
-    }
-
-    private void addUnique(List<String> list, String raw) {
-        if (raw == null || raw.trim().isEmpty()) return;
-        String formatted = raw.substring(0, 1).toUpperCase() + raw.substring(1).toLowerCase().trim();
-        for (String item : list) {
-            if (item.equalsIgnoreCase(formatted)) return;
-        }
-        list.add(formatted);
     }
 
     private void refreshTransactionsData() {
@@ -167,13 +148,16 @@ public class SettingsController {
         Platform.runLater(() -> {
             String query = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
             String selectedType = typeFilterCombo.getValue();
-            String selectedCategory = categoryFilterCombo.getValue();
+            String selectedCategory = categoryFilterCombo.getValue() == null ? "" : categoryFilterCombo.getValue().trim();
             LocalDate start = startDatePicker.getValue();
             LocalDate end = endDatePicker.getValue();
 
             filteredData.setPredicate(t -> {
                 if (selectedType != null && !selectedType.equals("All Types") && !t.getType().equalsIgnoreCase(selectedType)) return false;
-                if (selectedCategory != null && !selectedCategory.equals("All Categories") && !t.getCategoryName().equalsIgnoreCase(selectedCategory)) return false;
+
+                if (!selectedCategory.isEmpty() && !selectedCategory.equalsIgnoreCase("All Categories")) {
+                    if (!t.getCategoryName().equalsIgnoreCase(selectedCategory)) return false;
+                }
 
                 LocalDate d = t.getDate();
                 if (start != null && d != null && d.isBefore(start)) return false;
@@ -406,7 +390,7 @@ public class SettingsController {
         if (errors.length() > 0) {
             return "Passcode missing constraints:\n" + errors.toString().trim();
         }
-        return null; // Null means no errors, password is valid
+        return null;
     }
 
     public static class TransactionExportDTO {

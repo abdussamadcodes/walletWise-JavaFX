@@ -6,6 +6,7 @@ import com.walletwise.dao.TransactionDAO;
 import com.walletwise.model.Budget;
 import com.walletwise.model.Category;
 import com.walletwise.model.Transaction;
+import com.walletwise.util.CategoryUtil;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -98,25 +99,10 @@ public class BudgetController {
         list.add(cleanName);
     }
 
-    // --- UPDATED TO SCAN TRANSACTIONS TOO ---
     private void loadCategories() {
-        List<String> expenseCategories = new ArrayList<>();
-
-        // 1. Scan Category Table
-        for (Category c : categoryDAO.getAll()) {
-            if (c.getType().equalsIgnoreCase("Expense")) {
-                addUniqueCategory(expenseCategories, c.getName());
-            }
-        }
-
-        // 2. Scan Transaction Table (Catches orphaned categories like "Study product")
-        for (Transaction t : transactionDAO.getAll()) {
-            if (t.getType() != null && t.getType().equalsIgnoreCase("Expense")) {
-                addUniqueCategory(expenseCategories, t.getCategoryName());
-            }
-        }
-
-        categoryCombo.setItems(FXCollections.observableArrayList(expenseCategories));
+        // Only load expenses for the budget
+        List<String> expenseCategories = CategoryUtil.getExpenseCategories();
+        CategoryUtil.makeAutoComplete(categoryCombo, expenseCategories);
     }
 
     private void loadBudgetData() {

@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.walletwise.util.CategoryUtil;
 public class TransactionFormController {
 
     @FXML private Label titleLabel;
@@ -35,19 +35,9 @@ public class TransactionFormController {
     public void initialize() {
         typeCombo.setItems(FXCollections.observableArrayList("Income", "Expense"));
 
-        List<String> categoryNames = new ArrayList<>();
-
-        // 1. Scan Category Table
-        for (Category c : categoryDAO.getAll()) {
-            addUniqueCategory(categoryNames, c.getName());
-        }
-
-        // 2. Scan Transaction Table
-        for (Transaction t : transactionDAO.getAll()) {
-            addUniqueCategory(categoryNames, t.getCategoryName());
-        }
-
-        categoryCombo.setItems(FXCollections.observableArrayList(categoryNames));
+        // Use the centralized utility to load and attach the auto-complete
+        List<String> categoryNames = CategoryUtil.getAllUniqueCategories(false);
+        CategoryUtil.makeAutoComplete(categoryCombo, categoryNames);
 
         makeDatePickerTypable(datePicker);
         datePicker.setValue(LocalDate.now());
