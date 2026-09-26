@@ -43,9 +43,9 @@ public class DashboardController {
         double balance = totalIncome - totalExpense;
 
         // Update UI Labels
-        balanceLabel.setText(String.format("$%.2f", balance));
-        incomeLabel.setText(String.format("$%.2f", totalIncome));
-        expenseLabel.setText(String.format("$%.2f", totalExpense));
+        balanceLabel.setText(String.format("৳%.2f", balance));
+        incomeLabel.setText(String.format("৳%.2f", totalIncome));
+        expenseLabel.setText(String.format("৳%.2f", totalExpense));
 
         // Update PieChart
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
