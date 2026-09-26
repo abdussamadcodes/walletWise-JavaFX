@@ -6,16 +6,12 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.text.Font?>
 
-<!-- FIX: Changed prefWidth to 800 and prefHeight to 500 so it fits your laptop screen -->
+<!-- FIX: Removed hardcoded prefWidth and prefHeight so it fills the screen perfectly -->
 <BorderPane fx:id="rootPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.walletwise.controller.MainController"
-            prefWidth="800" prefHeight="500">
+            fx:controller="com.walletwise.controller.MainController">
 
     <left>
-        <!-- ... the rest of your FXML code stays exactly the same ... -->
-        <!-- ADDED fx:id="sidebar" and removed hardcoded prefWidth -->
         <VBox fx:id="sidebar" spacing="15" style="-fx-background-color: #2c3e50;">
             <padding><Insets top="30" right="15" bottom="20" left="15"/></padding>
 

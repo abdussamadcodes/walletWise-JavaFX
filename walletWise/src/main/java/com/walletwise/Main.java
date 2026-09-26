@@ -21,11 +21,21 @@ public class Main extends Application {
             root = FXMLLoader.load(getClass().getResource("/fxml/LoginLayout.fxml"));
             primaryStage.setTitle("WalletWise - Locked");
             primaryStage.setScene(new Scene(root, 500, 400));
+            primaryStage.setResizable(false);
         } else {
             // No passcode set, go straight to the Main Dashboard
             root = FXMLLoader.load(getClass().getResource("/fxml/MainLayout.fxml"));
             primaryStage.setTitle("WalletWise - Personal Finance Manager");
-            primaryStage.setScene(new Scene(root, 1100, 700));
+
+            // 1. SET SMALLER DEFAULT "RESTORE DOWN" SIZE (Width: 950, Height: 600)
+            primaryStage.setScene(new Scene(root, 950, 600));
+
+            // 2. LOWER THE MINIMUM CONSTRAINTS FOR MORE FLEXIBILITY
+            primaryStage.setMinWidth(850);
+            primaryStage.setMinHeight(550);
+
+            // 3. START MAXIMIZED
+            primaryStage.setMaximized(true);
         }
 
         primaryStage.show();

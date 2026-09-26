@@ -30,11 +30,24 @@ public class LoginController {
         String inputHash = SecurityUtil.hashPassword(input);
 
         if (inputHash.equals(savedHash)) {
-            // Password is correct! Load main application.
             try {
                 Stage stage = (Stage) passcodeField.getScene().getWindow();
                 Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainLayout.fxml"));
-                stage.setScene(new Scene(root, 1100, 700));
+
+                stage.setTitle("WalletWise - Personal Finance Manager");
+
+                // 1. SET SMALLER DEFAULT "RESTORE DOWN" SIZE
+                stage.setScene(new Scene(root, 950, 600));
+
+                stage.setResizable(true);
+
+                // 2. LOWER THE MINIMUM CONSTRAINTS
+                stage.setMinWidth(850);
+                stage.setMinHeight(550);
+
+                // 3. START MAXIMIZED
+                stage.setMaximized(true);
+
                 stage.centerOnScreen();
             } catch (Exception e) {
                 e.printStackTrace();
