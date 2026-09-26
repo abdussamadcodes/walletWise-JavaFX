@@ -46,12 +46,12 @@ public class BudgetController {
 
     private void setupTable() {
         categoryCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCategory()));
-        limitCol.setCellValueFactory(data -> new SimpleStringProperty(String.format("$%.2f", data.getValue().getLimit())));
-        spentCol.setCellValueFactory(data -> new SimpleStringProperty(String.format("$%.2f", data.getValue().getSpent())));
+        limitCol.setCellValueFactory(data -> new SimpleStringProperty(String.format("৳%.2f", data.getValue().getLimit())));
+        spentCol.setCellValueFactory(data -> new SimpleStringProperty(String.format("৳%.2f", data.getValue().getSpent())));
 
         remainingCol.setCellValueFactory(data -> {
             double remaining = data.getValue().getRemaining();
-            return new SimpleStringProperty(remaining < 0 ? String.format("-$%.2f", Math.abs(remaining)) : String.format("$%.2f", remaining));
+            return new SimpleStringProperty(remaining < 0 ? String.format("-৳%.2f", Math.abs(remaining)) : String.format("৳%.2f", remaining));
         });
 
         progressCol.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getProgressRatio()).asObject());

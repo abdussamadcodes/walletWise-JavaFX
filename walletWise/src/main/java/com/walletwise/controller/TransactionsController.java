@@ -143,7 +143,7 @@ public class TransactionsController {
         });
         typeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType()));
         categoryCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategoryName()));
-        amountCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("$%.2f", cellData.getValue().getAmount())));
+        amountCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("৳%.2f", cellData.getValue().getAmount())));
         descCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
     }
 

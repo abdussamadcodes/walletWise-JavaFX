@@ -61,7 +61,10 @@ public class MainController {
     private void showCurrency() {
         loadPage("CurrencyLayout.fxml");
     }
-
+    @FXML
+    private void showSettings() {
+        loadPage("SettingsLayout.fxml");
+    }
     private void setContent(String text) {
         contentArea.getChildren().clear();
         Label label = new Label(text);
