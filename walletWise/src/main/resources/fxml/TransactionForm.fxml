@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" style="-fx-background-color: white; -fx-padding: 30;"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.walletwise.controller.TransactionFormController"
+      prefWidth="400">
+
+    <Label fx:id="titleLabel" text="Add Transaction" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <GridPane hgap="15" vgap="15">
+        <Label text="Amount ($):" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-size: 14px;"/>
+        <TextField fx:id="amountField" promptText="0.00" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="200"/>
+
+        <Label text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-size: 14px;"/>
+        <ComboBox fx:id="typeCombo" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <Label text="Category:" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-size: 14px;"/>
+        <!-- FIX: Added editable="true" -->
+        <ComboBox fx:id="categoryCombo" editable="true" promptText="Select or type new..." prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+        <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="3" style="-fx-font-size: 14px;"/>
+        <DatePicker fx:id="datePicker" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="4" style="-fx-font-size: 14px;"/>
+        <TextField fx:id="descField" promptText="Optional details" GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="200"/>
+    </GridPane>
+
+    <Label fx:id="errorLabel" style="-fx-text-fill: #e74c3c; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel"
+                style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 8 20; -fx-cursor: hand;"/>
+        <Button text="Save Transaction" onAction="#handleSave"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand;"/>
+    </HBox>
+</VBox>

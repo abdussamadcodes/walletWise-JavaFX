@@ -7,10 +7,17 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class TransactionsController {
@@ -34,18 +41,21 @@ public class TransactionsController {
         loadTransactions();
     }
 
+
+
     private void setupTableColumns() {
-        // Teacher Requirement: Advanced OOP (Using Lambdas for cell factories)
         idCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getId()));
-        dateCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDate().toString()));
+
+        // FIX: Formatting the Table column to show DD-MM-YYYY
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        dateCol.setCellValueFactory(cellData -> {
+            LocalDate date = cellData.getValue().getDate();
+            return new SimpleStringProperty(date != null ? formatter.format(date) : "");
+        });
+
         typeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType()));
         categoryCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategoryName()));
-
-        // Format the amount column to look like money
-        amountCol.setCellValueFactory(cellData ->
-                new SimpleStringProperty(String.format("$%.2f", cellData.getValue().getAmount()))
-        );
-
+        amountCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("$%.2f", cellData.getValue().getAmount())));
         descCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
     }
 
@@ -55,34 +65,65 @@ public class TransactionsController {
         transactionTable.setItems(transactionList);
     }
 
+    // --- NEW METHOD: Opens the Add/Edit Popup Window ---
+    private void openTransactionForm(Transaction transaction) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TransactionForm.fxml"));
+            Parent root = loader.load();
+
+            // Pass the selected transaction to the popup controller
+            TransactionFormController controller = loader.getController();
+            if (transaction != null) {
+                controller.setTransaction(transaction);
+            }
+
+            Stage stage = new Stage();
+            stage.setTitle(transaction == null ? "Add Transaction" : "Edit Transaction");
+            stage.setScene(new Scene(root));
+
+            // This forces the user to interact with the popup before clicking the main window again
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait(); // Pauses code execution here until the popup is closed
+
+            // Automatically refresh the table after the popup closes!
+            loadTransactions();
+            messageLabel.setText(""); // Clear old messages
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            messageLabel.setText("Error opening form.");
+            messageLabel.setStyle("-fx-text-fill: #e74c3c;");
+        }
+    }
+
     @FXML
     private void handleAdd() {
-        messageLabel.setText("Add window coming in Phase 8!");
-        messageLabel.setStyle("-fx-text-fill: #27ae60;"); // Green
+        openTransactionForm(null); // Passing null tells it to create a NEW transaction
     }
 
     @FXML
     private void handleEdit() {
-        messageLabel.setText("Edit window coming in Phase 8!");
-        messageLabel.setStyle("-fx-text-fill: #f39c12;"); // Orange
+        Transaction selected = transactionTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            openTransactionForm(selected); // Passes the selected data to the popup
+        } else {
+            messageLabel.setText("Please select a transaction to edit.");
+            messageLabel.setStyle("-fx-text-fill: #e74c3c;");
+        }
     }
 
     @FXML
     private void handleDelete() {
-        // Get the transaction the user clicked on
         Transaction selected = transactionTable.getSelectionModel().getSelectedItem();
-
         if (selected != null) {
-            // Delete from database
             transactionDAO.delete(selected.getId());
-            // Remove from the visual table
             transactionList.remove(selected);
-
             messageLabel.setText("Transaction deleted successfully.");
-            messageLabel.setStyle("-fx-text-fill: #27ae60;"); // Green
+            messageLabel.setStyle("-fx-text-fill: #27ae60;");
         } else {
             messageLabel.setText("Please select a transaction to delete first.");
-            messageLabel.setStyle("-fx-text-fill: #e74c3c;"); // Red
+            messageLabel.setStyle("-fx-text-fill: #e74c3c;");
         }
     }
 }
