@@ -16,7 +16,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 
@@ -403,12 +405,46 @@ public class SettingsController {
     private void handleFactoryReset() {
         String savedHash = settingsDAO.getSetting("app_passcode");
 
-        // 1. Verify Passcode if the app is currently locked
+        // 1. Premium Custom Password Dialog (Masks text and matches app theme)
         if (savedHash != null && !savedHash.isEmpty()) {
-            TextInputDialog dialog = new TextInputDialog();
+            Dialog<String> dialog = new Dialog<>();
             dialog.setTitle("Authentication Required");
-            dialog.setHeaderText("App is locked.");
-            dialog.setContentText("Enter your current passcode to authorize reset:");
+
+            DialogPane dialogPane = dialog.getDialogPane();
+            dialogPane.setStyle("-fx-background-color: white;");
+
+            VBox content = new VBox();
+            content.setSpacing(15);
+            content.setPadding(new Insets(20, 20, 10, 20));
+
+            Label header = new Label("App is locked.");
+            header.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+            Label instructions = new Label("Enter your current passcode to authorize reset:");
+            instructions.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 14px;");
+
+            PasswordField pwd = new PasswordField();
+            pwd.setPromptText("Current Passcode");
+            pwd.setStyle("-fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 5;");
+
+            content.getChildren().addAll(header, instructions, pwd);
+            dialogPane.setContent(content);
+
+            ButtonType confirmButtonType = new ButtonType("Authorize", ButtonBar.ButtonData.OK_DONE);
+            dialogPane.getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+
+            Button confirmBtn = (Button) dialogPane.lookupButton(confirmButtonType);
+            confirmBtn.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 6 15; -fx-background-radius: 5;");
+            Button cancelBtn = (Button) dialogPane.lookupButton(ButtonType.CANCEL);
+            cancelBtn.setStyle("-fx-background-color: #bdc3c7; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 6 15; -fx-background-radius: 5;");
+
+            Platform.runLater(pwd::requestFocus);
+
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == confirmButtonType) {
+                    return pwd.getText();
+                }
+                return null;
+            });
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
@@ -423,20 +459,43 @@ public class SettingsController {
             }
         }
 
-        // 2. High-Friction Warning Confirmation
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        // 2. Premium Warning Alert (Styled with red accents)
+        Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Factory Reset");
-        alert.setHeaderText("WARNING: This will permanently delete ALL data.");
-        alert.setContentText("Are you absolutely sure you want to reset WalletWise? This action cannot be undone.");
+        alert.setHeaderText(null); // We will use a custom label instead
+
+        DialogPane alertPane = alert.getDialogPane();
+        alertPane.setStyle("-fx-background-color: white;");
+
+        VBox alertContent = new VBox();
+        alertContent.setSpacing(15);
+        alertContent.setPadding(new Insets(10, 10, 10, 10));
+
+        Label warningHeader = new Label("WARNING: Permanent Data Deletion");
+        warningHeader.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #c0392b;");
+
+        Label warningText = new Label("Are you absolutely sure you want to reset WalletWise?\n\nThis will permanently delete all transactions, budgets,\ncategories, and settings. This action cannot be undone.");
+        warningText.setStyle("-fx-text-fill: #2c3e50; -fx-font-size: 14px;");
+
+        alertContent.getChildren().addAll(warningHeader, warningText);
+        alertPane.setContent(alertContent);
+
+        alertPane.getButtonTypes().clear();
+        ButtonType resetBtnType = new ButtonType("Yes, Reset Everything", ButtonBar.ButtonData.OK_DONE);
+        alertPane.getButtonTypes().addAll(resetBtnType, ButtonType.CANCEL);
+
+        Button resetBtn = (Button) alertPane.lookupButton(resetBtnType);
+        resetBtn.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 6 15; -fx-background-radius: 5;");
+        Button alertCancelBtn = (Button) alertPane.lookupButton(ButtonType.CANCEL);
+        alertCancelBtn.setStyle("-fx-background-color: #bdc3c7; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 6 15; -fx-background-radius: 5;");
 
         Optional<ButtonType> confirmation = alert.showAndWait();
-        if (confirmation.isPresent() && confirmation.get() == ButtonType.OK) {
+        if (confirmation.isPresent() && confirmation.get() == resetBtnType) {
             performFullReset();
         }
     }
 
     private void performFullReset() {
-        // 3. Connect directly to SQLite and wipe the tables clean
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:walletwise.db");
              Statement stmt = conn.createStatement()) {
 
