@@ -2,42 +2,114 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="20" style="-fx-background-color: #ecf0f1; -fx-padding: 30;"
-      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.walletwise.controller.DashboardController">
+<!-- ADDED: fitToHeight="true" ensures the dashboard stretches to fit the maximized window perfectly without scrolling -->
+<ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background: #ecf0f1; -fx-background-color: #ecf0f1;"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.walletwise.controller.DashboardController">
+    <content>
+        <!-- REDUCED: Spacing from 25 to 15, padding from 30 to 20 -->
+        <VBox spacing="15" style="-fx-padding: 20; -fx-focus-color: #3498db; -fx-faint-focus-color: #3498db44;">
 
-    <Label text="Dashboard Overview" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <!-- Header Row -->
+            <HBox alignment="CENTER_LEFT">
+                <Label text="Financial Overview" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
 
-    <HBox spacing="20">
-        <!-- Balance Card -->
-        <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);" HBox.hgrow="ALWAYS">
-            <Label text="Total Balance" style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"/>
-            <!-- FIX: Removed the $ symbol here -->
-            <Label fx:id="balanceLabel" text="0.00" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <!-- Filter Controls -->
+            <!-- REDUCED: Padding top/bottom tightened to 10 -->
+            <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 10 20; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 10, 0, 0, 3);">
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Timeframe:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+
+                    <ComboBox fx:id="timeFilterCombo" prefWidth="200" style="-fx-font-size: 14px; -fx-background-radius: 6;"/>
+
+                    <Label fx:id="dateRangeLabel" style="-fx-font-size: 14px; -fx-text-fill: #95a5a6; -fx-font-weight: bold;"/>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <!-- Hidden Custom Date Controls -->
+                    <HBox fx:id="customDateContainer" spacing="10" alignment="CENTER_LEFT" visible="false" managed="false">
+                        <DatePicker fx:id="startDatePicker" promptText="From" prefWidth="130"/>
+                        <DatePicker fx:id="endDatePicker" promptText="To" prefWidth="130"/>
+                        <Button text="Apply" onAction="#handleApplyCustomDate"
+                                style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 6;"/>
+                    </HBox>
+                </HBox>
+            </VBox>
+
+            <!-- 4 Metric Cards Row -->
+            <!-- REDUCED: Internal padding tightened from 20 to 15 -->
+            <GridPane hgap="15" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="25" />
+                    <ColumnConstraints percentWidth="25" />
+                    <ColumnConstraints percentWidth="25" />
+                    <ColumnConstraints percentWidth="25" />
+                </columnConstraints>
+
+                <!-- Card 1: Total Income -->
+                <VBox spacing="5" GridPane.columnIndex="0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #27ae60; -fx-border-width: 0 0 0 5; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 8, 0, 0, 3);">
+                    <Label text="TOTAL INCOME" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #95a5a6;"/>
+                    <Label fx:id="incomeLabel" text="৳0.00" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+                </VBox>
+
+                <!-- Card 2: Total Expense -->
+                <VBox spacing="5" GridPane.columnIndex="1" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #e74c3c; -fx-border-width: 0 0 0 5; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 8, 0, 0, 3);">
+                    <Label text="TOTAL EXPENSE" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #95a5a6;"/>
+                    <Label fx:id="expenseLabel" text="৳0.00" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+                </VBox>
+
+                <!-- Card 3: Net Savings (Balance) -->
+                <VBox spacing="5" GridPane.columnIndex="2" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #2980b9; -fx-border-width: 0 0 0 5; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 8, 0, 0, 3);">
+                    <Label text="NET SAVINGS / BALANCE" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #95a5a6;"/>
+                    <Label fx:id="savingsLabel" text="৳0.00" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+                </VBox>
+
+                <!-- Card 4: Top Category -->
+                <VBox spacing="2" GridPane.columnIndex="3" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #8e44ad; -fx-border-width: 0 0 0 5; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 8, 0, 0, 3);">
+                    <Label text="HIGHEST SPENDING" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #95a5a6;"/>
+                    <Label fx:id="topCategoryLabel" text="N/A" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <Label fx:id="topCategoryAmountLabel" text="৳0.00" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #8e44ad;"/>
+                </VBox>
+            </GridPane>
+
+            <!-- Interactive Charts Row (Proportional 40/60 Layout) -->
+            <!-- VBox.vgrow="ALWAYS" tells the charts to consume all remaining space -->
+            <GridPane hgap="15" VBox.vgrow="ALWAYS">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="38" />
+                    <ColumnConstraints percentWidth="62" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="ALWAYS" />
+                </rowConstraints>
+
+                <!-- Cash Flow Bar Chart (Income vs Expense) -->
+                <!-- REDUCED: minHeight from 320 to 250 so it shrinks well on small screens but stretches on large ones -->
+                <VBox spacing="10" GridPane.columnIndex="0" style="-fx-background-color: white; -fx-padding: 15 20; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 10, 0, 0, 3);">
+                    <Label text="Income vs Expense" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <BarChart fx:id="incomeExpenseChart" VBox.vgrow="ALWAYS" legendVisible="false" verticalGridLinesVisible="false" horizontalGridLinesVisible="true" minHeight="250" animated="false" style="-fx-bar-gap: 15; -fx-category-gap: 35;">
+                        <xAxis>
+                            <CategoryAxis fx:id="xAxis" tickLabelFill="#2c3e50" tickMarkVisible="false" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis fx:id="yAxis" tickLabelsVisible="false" tickMarkVisible="false" minorTickVisible="false" />
+                        </yAxis>
+                    </BarChart>
+                </VBox>
+
+                <!-- Expense Breakdown Pie Chart -->
+                <VBox spacing="10" GridPane.columnIndex="1" style="-fx-background-color: white; -fx-padding: 15 20; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 10, 0, 0, 3);">
+                    <Label text="Expense Category Breakdown" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <PieChart fx:id="expensePieChart" VBox.vgrow="ALWAYS" legendSide="RIGHT" labelsVisible="false" minHeight="250" animated="false" style="-fx-padding: 0 10 0 10;"/>
+                </VBox>
+
+            </GridPane>
+
         </VBox>
-
-        <!-- Income Card -->
-        <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);" HBox.hgrow="ALWAYS">
-            <Label text="Total Income" style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"/>
-            <!-- FIX: Removed the $ symbol here -->
-            <Label fx:id="incomeLabel" text="0.00" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
-        </VBox>
-
-        <!-- Expense Card -->
-        <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);" HBox.hgrow="ALWAYS">
-            <Label text="Total Expenses" style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"/>
-            <!-- FIX: Removed the $ symbol here -->
-            <Label fx:id="expenseLabel" text="0.00" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
-        </VBox>
-    </HBox>
-
-    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);" VBox.vgrow="ALWAYS">
-        <Label text="Income vs Expenses" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-
-        <PieChart fx:id="pieChart" VBox.vgrow="ALWAYS" />
-    </VBox>
-
-</VBox>
+    </content>
+</ScrollPane>
