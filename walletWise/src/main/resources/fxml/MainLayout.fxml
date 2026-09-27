@@ -2,35 +2,53 @@
 
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.geometry.Insets?>
 
-<!-- FIX: Removed hardcoded prefWidth and prefHeight so it fills the screen perfectly -->
 <BorderPane fx:id="rootPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.walletwise.controller.MainController">
 
     <left>
-        <VBox fx:id="sidebar" spacing="15" style="-fx-background-color: #2c3e50;">
-            <padding><Insets top="30" right="15" bottom="20" left="15"/></padding>
+        <!-- Upgraded Sidebar with a deeper color and subtle shadow -->
+        <VBox fx:id="sidebar" spacing="10" style="-fx-background-color: #1a252f; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);">
+            <padding><Insets top="40" right="20" bottom="30" left="20"/></padding>
 
-            <Label text="WalletWise" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;">
+            <!-- Premium Branded Logo -->
+            <HBox alignment="CENTER_LEFT" spacing="2">
                 <VBox.margin>
-                    <Insets bottom="20"/>
+                    <Insets bottom="30" left="10"/>
                 </VBox.margin>
-            </Label>
+                <Label text="Wallet" style="-fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+                <Label text="Wise" style="-fx-text-fill: #27ae60; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+            </HBox>
 
+            <!-- Menu Category Header -->
+            <Label text="MAIN MENU" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 0 0 10 10;"/>
+
+            <!-- Standardized Rounded Navigation Buttons -->
             <Button text="Dashboard" onAction="#showDashboard" maxWidth="Infinity"
-                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-alignment: center-left; -fx-cursor: hand;"/>
+                    style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-cursor: hand; -fx-padding: 12 20; -fx-background-radius: 8;"/>
+
             <Button text="Transactions" onAction="#showTransactions" maxWidth="Infinity"
-                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-alignment: center-left; -fx-cursor: hand;"/>
+                    style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-cursor: hand; -fx-padding: 12 20; -fx-background-radius: 8;"/>
+
             <Button text="Budget" onAction="#showBudget" maxWidth="Infinity"
-                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-alignment: center-left; -fx-cursor: hand;"/>
+                    style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-cursor: hand; -fx-padding: 12 20; -fx-background-radius: 8;"/>
+
             <Button text="Currency" onAction="#showCurrency" maxWidth="Infinity"
-                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-alignment: center-left; -fx-cursor: hand;"/>
-            <Button text="Settings" onAction="#showSettings"
-                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-alignment: BASELINE_LEFT; -fx-cursor: hand; -fx-padding: 10 20;"/>
+                    style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-cursor: hand; -fx-padding: 12 20; -fx-background-radius: 8;"/>
+
+            <!-- This Region pushes the Settings button to the very bottom -->
+            <Region VBox.vgrow="ALWAYS" />
+
+            <!-- Footer Menu Category -->
+            <Label text="PREFERENCES" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 0 0 5 10;"/>
+            <Button text="Settings" onAction="#showSettings" maxWidth="Infinity"
+                    style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-alignment: CENTER_LEFT; -fx-cursor: hand; -fx-padding: 12 20; -fx-background-radius: 8;"/>
         </VBox>
     </left>
 
