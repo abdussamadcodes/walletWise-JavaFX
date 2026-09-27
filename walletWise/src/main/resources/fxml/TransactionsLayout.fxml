@@ -4,17 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<!-- Added focus-color variables to the root. This makes tabbing extremely obvious with a bright blue glow! -->
 <VBox spacing="20" style="-fx-background-color: #ecf0f1; -fx-padding: 30; -fx-focus-color: #3498db; -fx-faint-focus-color: #3498db44;"
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.walletwise.controller.TransactionsController">
 
     <Label text="Transaction History" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
 
-    <!-- Premium Filter Card with rounded corners and soft shadow -->
     <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 4);">
-
-        <!-- Row 1: Search, Type, and Category Filter -->
         <HBox spacing="15" alignment="CENTER_LEFT">
             <TextField fx:id="searchField" promptText="Search by ID or Description..." prefWidth="250"
                        style="-fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 5;"/>
@@ -23,13 +19,12 @@
                       style="-fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 3;"/>
 
             <ComboBox fx:id="categoryFilterCombo" prefWidth="180"
-                      style="-fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 3;"/>
+                      style="-fx-font-size: 14px; -background-radius: 5; -fx-padding: 3;"/>
 
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="recordCountLabel" text="0 records found" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d; -fx-font-weight: bold;"/>
         </HBox>
 
-        <!-- Row 2: Date Filters -->
         <HBox spacing="15" alignment="CENTER_LEFT">
             <Label text="From Date:" style="-fx-font-size: 14px; -fx-text-fill: #34495e; -fx-font-weight: bold;"/>
             <DatePicker fx:id="startDatePicker" prefWidth="150" style="-fx-font-size: 13px;"/>
@@ -43,7 +38,6 @@
         </HBox>
     </VBox>
 
-    <!-- Premium Table Styling -->
     <TableView fx:id="transactionTable" VBox.vgrow="ALWAYS"
                style="-fx-font-size: 14px; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #bdc3c7; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);">
         <columns>
@@ -59,7 +53,6 @@
         </columnResizePolicy>
     </TableView>
 
-    <!-- Modern Action Buttons with glowing shadows -->
     <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 5 0 0 0;">
         <Button text="Add Transaction" onAction="#handleAdd"
                 style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 10 25; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(39,174,96,0.3), 10, 0, 0, 4);"/>
@@ -71,6 +64,13 @@
                 style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 10 25; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(231,76,60,0.3), 10, 0, 0, 4);"/>
 
         <Region HBox.hgrow="ALWAYS" />
-        <Label fx:id="messageLabel" style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+
+        <!-- NEW: Dynamic Toast Message Box with Undo Button -->
+        <HBox fx:id="messageBox" spacing="12" alignment="CENTER" visible="false"
+              style="-fx-padding: 6 15; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-width: 1;">
+            <Label fx:id="messageLabel" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+            <Button fx:id="undoButton" text="Undo" onAction="#handleUndo" managed="false" visible="false"
+                    style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 12; -fx-cursor: hand; -fx-padding: 3 12;"/>
+        </HBox>
     </HBox>
 </VBox>

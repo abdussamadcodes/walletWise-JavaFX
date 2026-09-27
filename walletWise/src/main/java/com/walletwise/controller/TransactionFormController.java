@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import com.walletwise.util.CategoryUtil;
+
 public class TransactionFormController {
 
     @FXML private Label titleLabel;
@@ -31,11 +32,13 @@ public class TransactionFormController {
 
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
+    // --- NEW: Tracks if the transaction was successfully saved ---
+    private boolean saved = false;
+
     @FXML
     public void initialize() {
         typeCombo.setItems(FXCollections.observableArrayList("Income", "Expense"));
 
-        // Use the centralized utility to load and attach the auto-complete
         List<String> categoryNames = CategoryUtil.getAllUniqueCategories(false);
         CategoryUtil.makeAutoComplete(categoryCombo, categoryNames);
 
@@ -43,7 +46,6 @@ public class TransactionFormController {
         datePicker.setValue(LocalDate.now());
     }
 
-    // --- NEW HELPER METHOD ---
     private void addUniqueCategory(List<String> list, String rawName) {
         if (rawName == null || rawName.trim().isEmpty()) return;
         String cleanName = rawName.substring(0, 1).toUpperCase() + rawName.substring(1).toLowerCase().trim();
@@ -99,10 +101,8 @@ public class TransactionFormController {
         categoryCombo.setValue(t.getCategoryName());
     }
 
-    // --- NEW HELPER: Formats "food" into "Food" ---
     private String formatCategoryName(String rawName) {
         if (rawName == null || rawName.isEmpty()) return rawName;
-        // Capitalize first letter, lowercase the rest
         return rawName.substring(0, 1).toUpperCase() + rawName.substring(1).toLowerCase();
     }
 
@@ -118,14 +118,10 @@ public class TransactionFormController {
 
             double amount = Double.parseDouble(amountField.getText());
             String type = typeCombo.getValue();
-
-            // FIX: Apply the formatting to the category name right here
             String categoryName = formatCategoryName(categoryCombo.getValue().trim());
-
             LocalDate date = datePicker.getValue();
             String desc = descField.getText();
 
-            // Ignore case when checking if category already exists
             boolean categoryExists = false;
             for (String item : categoryCombo.getItems()) {
                 if (item.equalsIgnoreCase(categoryName)) {
@@ -139,7 +135,7 @@ public class TransactionFormController {
             }
 
             if (transactionToEdit == null) {
-                Transaction newTx = new Transaction(amount, type, categoryName, desc, date, "USD");
+                Transaction newTx = new Transaction(amount, type, categoryName, desc, date, "BDT");
                 transactionDAO.add(newTx);
             } else {
                 transactionToEdit.setAmount(amount);
@@ -150,6 +146,8 @@ public class TransactionFormController {
                 transactionDAO.update(transactionToEdit);
             }
 
+            // --- NEW: Mark as successfully saved before closing ---
+            this.saved = true;
             closeWindow();
 
         } catch (NumberFormatException e) {
@@ -165,5 +163,10 @@ public class TransactionFormController {
     private void closeWindow() {
         Stage stage = (Stage) titleLabel.getScene().getWindow();
         stage.close();
+    }
+
+
+    public boolean isSaved() {
+        return saved;
     }
 }

@@ -3,6 +3,7 @@ package com.walletwise.controller;
 import com.walletwise.dao.TransactionDAO;
 import com.walletwise.model.Transaction;
 import com.walletwise.util.CategoryUtil;
+import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,8 +15,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 
 import java.time.LocalDate;
@@ -38,7 +41,14 @@ public class TransactionsController {
     @FXML private DatePicker startDatePicker;
     @FXML private DatePicker endDatePicker;
     @FXML private Label recordCountLabel;
+
+    // --- TOAST NOTIFICATION FIELDS ---
+    @FXML private HBox messageBox;
     @FXML private Label messageLabel;
+    @FXML private Button undoButton;
+
+    private PauseTransition messageTimer;
+    private Transaction lastDeletedTransaction = null;
 
     private final TransactionDAO transactionDAO = new TransactionDAO();
     private ObservableList<Transaction> transactionList;
@@ -59,7 +69,6 @@ public class TransactionsController {
         loadCategoryFilter();
         loadTransactions();
 
-        // Listeners for live filtering
         searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         typeFilterCombo.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         categoryFilterCombo.valueProperty().addListener((observable, oldValue, newValue) -> applyFilters());
@@ -96,11 +105,8 @@ public class TransactionsController {
             if (!newValue) {
                 try {
                     String text = picker.getEditor().getText();
-                    if (text == null || text.trim().isEmpty()) {
-                        picker.setValue(null);
-                    } else {
-                        picker.setValue(LocalDate.parse(text.trim(), dateFormatter));
-                    }
+                    if (text == null || text.trim().isEmpty()) picker.setValue(null);
+                    else picker.setValue(LocalDate.parse(text.trim(), dateFormatter));
                 } catch (Exception e) {
                     picker.getEditor().setText(picker.getConverter().toString(picker.getValue()));
                 }
@@ -174,6 +180,40 @@ public class TransactionsController {
         recordCountLabel.setText(filteredData.size() + " records found");
     }
 
+    // --- TOAST NOTIFICATION SYSTEM ---
+    private void showToast(String message, String type, boolean showUndoBtn) {
+        messageLabel.setText(message);
+        undoButton.setVisible(showUndoBtn);
+        undoButton.setManaged(showUndoBtn);
+        messageBox.setVisible(true);
+
+        if ("SUCCESS".equals(type)) {
+            // Green aesthetic for Add/Edit
+            messageBox.setStyle("-fx-background-color: #e8f8f5; -fx-padding: 6 15; -fx-background-radius: 20; -fx-border-color: #27ae60; -fx-border-radius: 20; -fx-border-width: 1;");
+            messageLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #27ae60;");
+        } else if ("DELETE".equals(type)) {
+            // Orange aesthetic for Deletion with Undo
+            messageBox.setStyle("-fx-background-color: #fdf2e9; -fx-padding: 6 15; -fx-background-radius: 20; -fx-border-color: #e67e22; -fx-border-radius: 20; -fx-border-width: 1;");
+            messageLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e67e22;");
+            undoButton.setStyle("-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 12; -fx-cursor: hand; -fx-padding: 3 10;");
+        } else {
+            // Red aesthetic for Errors
+            messageBox.setStyle("-fx-background-color: #fdedec; -fx-padding: 6 15; -fx-background-radius: 20; -fx-border-color: #e74c3c; -fx-border-radius: 20; -fx-border-width: 1;");
+            messageLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;");
+        }
+
+        // Hide message automatically after 7 seconds
+        if (messageTimer != null) messageTimer.stop();
+        messageTimer = new PauseTransition(Duration.seconds(7));
+        messageTimer.setOnFinished(e -> {
+            messageBox.setVisible(false);
+            if (showUndoBtn) {
+                lastDeletedTransaction = null; // Memory cleanup
+            }
+        });
+        messageTimer.play();
+    }
+
     private void openTransactionForm(Transaction transaction) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TransactionForm.fxml"));
@@ -191,15 +231,21 @@ public class TransactionsController {
             stage.setResizable(false);
             stage.showAndWait();
 
-            loadTransactions();
-            loadCategoryFilter();
-            messageLabel.setText("");
-            applyFilters();
+            // Trigger success message only if save was clicked
+            if (controller.isSaved()) {
+                if (transaction == null) {
+                    showToast("Transaction added successfully", "SUCCESS", false);
+                } else {
+                    showToast("Transaction updated successfully", "SUCCESS", false);
+                }
+                loadTransactions();
+                loadCategoryFilter();
+                applyFilters();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
-            messageLabel.setText("Error opening form.");
-            messageLabel.setStyle("-fx-text-fill: #e74c3c;");
+            showToast("Error opening form.", "ERROR", false);
         }
     }
 
@@ -212,8 +258,7 @@ public class TransactionsController {
         if (selected != null) {
             openTransactionForm(selected);
         } else {
-            messageLabel.setText("Please select a transaction to edit.");
-            messageLabel.setStyle("-fx-text-fill: #e74c3c;");
+            showToast("Please select a transaction to edit.", "ERROR", false);
         }
     }
 
@@ -221,14 +266,31 @@ public class TransactionsController {
     private void handleDelete() {
         Transaction selected = transactionTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
+            // Save to memory for undo
+            lastDeletedTransaction = selected;
+
             transactionDAO.delete(selected.getId());
             transactionList.remove(selected);
-            messageLabel.setText("Transaction deleted successfully.");
-            messageLabel.setStyle("-fx-text-fill: #27ae60;");
             updateRecordCount();
+
+            showToast("Transaction deleted", "DELETE", true);
         } else {
-            messageLabel.setText("Please select a transaction to delete first.");
-            messageLabel.setStyle("-fx-text-fill: #e74c3c;");
+            showToast("Please select a transaction to delete first.", "ERROR", false);
+        }
+    }
+
+    @FXML
+    private void handleUndo() {
+        if (lastDeletedTransaction != null) {
+            // Re-insert into database
+            transactionDAO.add(lastDeletedTransaction);
+
+            loadTransactions();
+            loadCategoryFilter();
+            applyFilters();
+
+            showToast("Action undone. Transaction restored.", "SUCCESS", false);
+            lastDeletedTransaction = null;
         }
     }
 }
