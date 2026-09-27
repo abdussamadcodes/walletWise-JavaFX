@@ -95,6 +95,17 @@
                     </HBox>
                 </VBox>
                 <Label fx:id="securityStatusLabel" style="-fx-font-size: 13px; -fx-font-weight: bold;"/>
+
+                <Separator/>
+
+                <!-- Danger Zone for Factory Reset -->
+                <VBox spacing="5">
+                    <Label text="Danger Zone" style="-fx-font-size: 14px; -fx-text-fill: #e74c3c; -fx-font-weight: bold;"/>
+                    <Label text="Permanently delete all transactions, budgets, categories, and remove the passcode." style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;"/>
+                    <Button text="Factory Reset App" onAction="#handleFactoryReset"
+                            style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 20;"/>
+                </VBox>
+
             </VBox>
 
         </VBox>

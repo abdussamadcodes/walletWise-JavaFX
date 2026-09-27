@@ -21,10 +21,14 @@ import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SettingsController {
@@ -393,6 +397,77 @@ public class SettingsController {
             return "Passcode missing constraints:\n" + errors.toString().trim();
         }
         return null;
+    }
+
+    @FXML
+    private void handleFactoryReset() {
+        String savedHash = settingsDAO.getSetting("app_passcode");
+
+        // 1. Verify Passcode if the app is currently locked
+        if (savedHash != null && !savedHash.isEmpty()) {
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Authentication Required");
+            dialog.setHeaderText("App is locked.");
+            dialog.setContentText("Enter your current passcode to authorize reset:");
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                String inputHash = SecurityUtil.hashPassword(result.get());
+                if (!inputHash.equals(savedHash)) {
+                    securityStatusLabel.setText("Incorrect passcode. Factory reset aborted.");
+                    securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+                    return;
+                }
+            } else {
+                return; // User clicked cancel
+            }
+        }
+
+        // 2. High-Friction Warning Confirmation
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Factory Reset");
+        alert.setHeaderText("WARNING: This will permanently delete ALL data.");
+        alert.setContentText("Are you absolutely sure you want to reset WalletWise? This action cannot be undone.");
+
+        Optional<ButtonType> confirmation = alert.showAndWait();
+        if (confirmation.isPresent() && confirmation.get() == ButtonType.OK) {
+            performFullReset();
+        }
+    }
+
+    private void performFullReset() {
+        // 3. Connect directly to SQLite and wipe the tables clean
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:walletwise.db");
+             Statement stmt = conn.createStatement()) {
+
+            stmt.execute("DELETE FROM transactions");
+            stmt.execute("DELETE FROM categories");
+            stmt.execute("DELETE FROM budget_limits");
+            stmt.execute("DELETE FROM app_settings");
+
+            stmt.execute("DELETE FROM sqlite_sequence");
+
+            stmt.execute("INSERT INTO categories (name, type) VALUES " +
+                    "('Salary', 'Income'), " +
+                    "('Freelance', 'Income'), " +
+                    "('Food', 'Expense'), " +
+                    "('Transport', 'Expense'), " +
+                    "('Utilities', 'Expense');");
+
+            refreshTransactionsData();
+            loadCategories();
+            autoBackupCheck.setSelected(false);
+            currentPassField.clear();
+            passField1.clear();
+            passField2.clear();
+
+            securityStatusLabel.setText("App successfully reset to factory defaults.");
+            securityStatusLabel.setStyle("-fx-text-fill: #27ae60;");
+
+        } catch (Exception e) {
+            securityStatusLabel.setText("Reset failed: " + e.getMessage());
+            securityStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+        }
     }
 
     public static class TransactionExportDTO {
