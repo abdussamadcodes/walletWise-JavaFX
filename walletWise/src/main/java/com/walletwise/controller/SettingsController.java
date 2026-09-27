@@ -3,6 +3,16 @@ package com.walletwise.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import com.walletwise.dao.SettingsDAO;
 import com.walletwise.dao.TransactionDAO;
 import com.walletwise.model.Transaction;
@@ -22,7 +32,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 
+import java.awt.Color;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -89,7 +101,6 @@ public class SettingsController {
 
         updateFilteredPreview();
 
-        // Load Auto-Backup Preference
         String backupSetting = settingsDAO.getSetting("auto_backup");
         autoBackupCheck.setSelected("true".equals(backupSetting));
 
@@ -112,7 +123,7 @@ public class SettingsController {
         });
         typeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType()));
         categoryCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategoryName()));
-        amountCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("৳%.2f", cellData.getValue().getAmount())));
+        amountCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("BDT %.2f", cellData.getValue().getAmount())));
         descCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
     }
 
@@ -183,7 +194,7 @@ public class SettingsController {
                 return t.getDescription() != null && t.getDescription().toLowerCase().contains(query);
             });
 
-            exportPreviewLabel.setText(filteredData.size() + " records selected for export");
+            exportPreviewLabel.setText(filteredData.size() + " records selected");
         });
     }
 
@@ -195,6 +206,106 @@ public class SettingsController {
         startDatePicker.setValue(null);
         endDatePicker.setValue(null);
         exportStatusLabel.setText("");
+    }
+
+    // --- NEW: EXPORT AS PDF METHOD ---
+    @FXML
+    private void handleExportPDF() {
+        if (filteredData.isEmpty()) {
+            exportStatusLabel.setText("No transactions match the selected filters.");
+            exportStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Transactions PDF Report");
+        fileChooser.setInitialFileName("walletwise_report_" + LocalDate.now() + ".pdf");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files (*.pdf)", "*.pdf"));
+
+        File file = fileChooser.showSaveDialog(searchField.getScene().getWindow());
+        if (file != null) {
+            try {
+                Document document = new Document(PageSize.A4.rotate());
+                PdfWriter.getInstance(document, new FileOutputStream(file));
+                document.open();
+
+                Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 22, Color.BLACK);
+                Paragraph title = new Paragraph("WalletWise Financial Report", titleFont);
+                title.setAlignment(Element.ALIGN_CENTER);
+                title.setSpacingAfter(20);
+                document.add(title);
+
+                PdfPTable table = new PdfPTable(6);
+                table.setWidthPercentage(100);
+                table.setWidths(new float[]{1, 2, 2, 3, 2, 4});
+
+                String[] headers = {"ID", "Date", "Type", "Category", "Amount", "Description"};
+                Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Color.WHITE);
+                for (String h : headers) {
+                    PdfPCell cell = new PdfPCell(new Phrase(h, headerFont));
+                    cell.setBackgroundColor(new Color(44, 62, 80));
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    cell.setPadding(8);
+                    table.addCell(cell);
+                }
+
+                double totalIncome = 0;
+                double totalExpense = 0;
+                Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.BLACK);
+
+                for (Transaction t : filteredData) {
+                    PdfPCell idCell = new PdfPCell(new Phrase(String.valueOf(t.getId()), dataFont));
+                    idCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    table.addCell(idCell);
+
+                    table.addCell(new Phrase(t.getDate() != null ? dateFormatter.format(t.getDate()) : "", dataFont));
+                    table.addCell(new Phrase(t.getType(), dataFont));
+                    table.addCell(new Phrase(t.getCategoryName(), dataFont));
+                    table.addCell(new Phrase(String.format("BDT %.2f", t.getAmount()), dataFont));
+                    table.addCell(new Phrase(t.getDescription() != null ? t.getDescription() : "", dataFont));
+
+                    if ("Income".equalsIgnoreCase(t.getType())) {
+                        totalIncome += t.getAmount();
+                    } else if ("Expense".equalsIgnoreCase(t.getType())) {
+                        totalExpense += t.getAmount();
+                    }
+                }
+                document.add(table);
+
+                double balance = totalIncome - totalExpense;
+
+                Font summaryLabelFont = FontFactory.getFont(FontFactory.HELVETICA, 14, Color.DARK_GRAY);
+                Font summaryValueFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, Color.BLACK);
+
+                Paragraph summary = new Paragraph();
+
+                // --- FIX: Use setSpacingBefore instead of setSpacingTop ---
+                summary.setSpacingBefore(20f);
+
+                summary.add(new Phrase("Total Income: ", summaryLabelFont));
+                summary.add(new Phrase(String.format("BDT %.2f\n", totalIncome), summaryValueFont));
+
+                summary.add(new Phrase("Total Expense: ", summaryLabelFont));
+                summary.add(new Phrase(String.format("BDT %.2f\n", totalExpense), summaryValueFont));
+
+                summary.add(new Phrase("Current Balance: ", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, Color.BLACK)));
+
+                Color balanceColor = balance >= 0 ? new Color(39, 174, 96) : new Color(231, 76, 60);
+                Font balanceFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, balanceColor);
+                summary.add(new Phrase(String.format("BDT %.2f", balance), balanceFont));
+
+                document.add(summary);
+                document.close();
+
+                exportStatusLabel.setText("Successfully exported PDF Report!");
+                exportStatusLabel.setStyle("-fx-text-fill: #8e44ad;");
+
+            } catch (Exception e) {
+                exportStatusLabel.setText("PDF Export failed: " + e.getMessage());
+                exportStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
@@ -224,7 +335,7 @@ public class SettingsController {
                         )).collect(Collectors.toList());
 
                 mapper.writeValue(file, exportList);
-                exportStatusLabel.setText("Successfully exported " + exportList.size() + " records!");
+                exportStatusLabel.setText("Successfully exported JSON!");
                 exportStatusLabel.setStyle("-fx-text-fill: #27ae60;");
             } catch (Exception e) {
                 exportStatusLabel.setText("Export failed: " + e.getMessage());
@@ -405,7 +516,6 @@ public class SettingsController {
     private void handleFactoryReset() {
         String savedHash = settingsDAO.getSetting("app_passcode");
 
-        // 1. Premium Custom Password Dialog (Masks text and matches app theme)
         if (savedHash != null && !savedHash.isEmpty()) {
             Dialog<String> dialog = new Dialog<>();
             dialog.setTitle("Authentication Required");
@@ -455,14 +565,13 @@ public class SettingsController {
                     return;
                 }
             } else {
-                return; // User clicked cancel
+                return;
             }
         }
 
-        // 2. Premium Warning Alert (Styled with red accents)
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Factory Reset");
-        alert.setHeaderText(null); // We will use a custom label instead
+        alert.setHeaderText(null);
 
         DialogPane alertPane = alert.getDialogPane();
         alertPane.setStyle("-fx-background-color: white;");
