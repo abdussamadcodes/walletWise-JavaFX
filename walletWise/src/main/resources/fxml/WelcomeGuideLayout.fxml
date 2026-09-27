@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background: #ecf0f1; -fx-background-color: #ecf0f1;"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.walletwise.controller.WelcomeGuideController">
+
+    <!-- Optimized vertical spacing and padding to eliminate scrolling -->
+    <VBox alignment="CENTER" spacing="12" style="-fx-padding: 15;">
+
+        <!-- Header -->
+        <VBox alignment="CENTER" spacing="2">
+            <Label text="Welcome to WalletWise" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="Let's get you set up for financial success." style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;"/>
+        </VBox>
+
+        <!-- Main Premium Card -->
+        <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 20 25; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 10, 0, 0, 3); -fx-max-width: 580;">
+
+            <VBox spacing="4">
+                <Label text="1. Preferred Currency" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+                <Label text="Permanently used for all calculations, charts, and reports." style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+                <ComboBox fx:id="currencyCombo" maxWidth="Infinity" style="-fx-font-size: 13px; -fx-padding: 2; -fx-cursor: hand;"/>
+            </VBox>
+
+            <Separator/>
+
+            <!-- NEW: Side-by-Side Passcode Fields to save vertical space -->
+            <VBox spacing="4">
+                <Label text="2. App Security (Optional)" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+                <HBox spacing="15">
+                    <PasswordField fx:id="passField1" promptText="Enter Passcode (8+ chars, letter, num, special)" HBox.hgrow="ALWAYS" style="-fx-font-size: 13px; -fx-padding: 6;"/>
+                    <PasswordField fx:id="passField2" promptText="Confirm Passcode" HBox.hgrow="ALWAYS" style="-fx-font-size: 13px; -fx-padding: 6;"/>
+                </HBox>
+            </VBox>
+
+            <Separator/>
+
+            <VBox spacing="4">
+                <Label text="3. Data Safety" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+                <CheckBox fx:id="autoBackupCheck" text="Enable Automatic Backups on Exit" style="-fx-font-size: 13px; -fx-text-fill: #27ae60; -fx-font-weight: bold; -fx-cursor: hand;"/>
+            </VBox>
+
+            <!-- Dynamic Error Label -->
+            <Label fx:id="errorLabel" style="-fx-text-fill: #e74c3c; -fx-font-size: 12px; -fx-font-weight: bold; -fx-wrap-text: true;" minHeight="-Infinity"/>
+        </VBox>
+
+        <!-- Action Buttons -->
+        <HBox spacing="15" alignment="CENTER" style="-fx-padding: 5 0 0 0;">
+            <Button text="Skip Setup" onAction="#handleSkip"
+                    style="-fx-background-color: transparent; -fx-text-fill: #95a5a6; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-border-color: #bdc3c7; -fx-border-radius: 6; -fx-border-width: 2;"/>
+
+            <Button text="Finish &amp; Enter App" onAction="#handleFinish" defaultButton="true"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 9 25; -fx-cursor: hand; -fx-background-radius: 6; -fx-effect: dropshadow(three-pass-box, rgba(39,174,96,0.3), 8, 0, 0, 3);"/>
+        </HBox>
+    </VBox>
+</ScrollPane>

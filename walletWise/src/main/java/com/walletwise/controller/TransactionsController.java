@@ -3,6 +3,7 @@ package com.walletwise.controller;
 import com.walletwise.dao.TransactionDAO;
 import com.walletwise.model.Transaction;
 import com.walletwise.util.CategoryUtil;
+import com.walletwise.util.CurrencyUtil;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -42,7 +43,6 @@ public class TransactionsController {
     @FXML private DatePicker endDatePicker;
     @FXML private Label recordCountLabel;
 
-    // --- TOAST NOTIFICATION FIELDS ---
     @FXML private HBox messageBox;
     @FXML private Label messageLabel;
     @FXML private Button undoButton;
@@ -59,7 +59,6 @@ public class TransactionsController {
     @FXML
     public void initialize() {
         setupTableColumns();
-
         makeDatePickerTypable(startDatePicker);
         makeDatePickerTypable(endDatePicker);
 
@@ -115,6 +114,7 @@ public class TransactionsController {
     }
 
     private void setupTableColumns() {
+        String sym = CurrencyUtil.getCurrencySymbol();
         idCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getId()));
         dateCol.setCellValueFactory(cellData -> {
             LocalDate date = cellData.getValue().getDate();
@@ -122,7 +122,7 @@ public class TransactionsController {
         });
         typeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType()));
         categoryCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategoryName()));
-        amountCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("৳%.2f", cellData.getValue().getAmount())));
+        amountCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("%s%.2f", sym, cellData.getValue().getAmount())));
         descCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
     }
 
@@ -180,7 +180,6 @@ public class TransactionsController {
         recordCountLabel.setText(filteredData.size() + " records found");
     }
 
-    // --- TOAST NOTIFICATION SYSTEM ---
     private void showToast(String message, String type, boolean showUndoBtn) {
         messageLabel.setText(message);
         undoButton.setVisible(showUndoBtn);
@@ -188,28 +187,22 @@ public class TransactionsController {
         messageBox.setVisible(true);
 
         if ("SUCCESS".equals(type)) {
-            // Green aesthetic for Add/Edit
             messageBox.setStyle("-fx-background-color: #e8f8f5; -fx-padding: 6 15; -fx-background-radius: 20; -fx-border-color: #27ae60; -fx-border-radius: 20; -fx-border-width: 1;");
             messageLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #27ae60;");
         } else if ("DELETE".equals(type)) {
-            // Orange aesthetic for Deletion with Undo
             messageBox.setStyle("-fx-background-color: #fdf2e9; -fx-padding: 6 15; -fx-background-radius: 20; -fx-border-color: #e67e22; -fx-border-radius: 20; -fx-border-width: 1;");
             messageLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e67e22;");
             undoButton.setStyle("-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 12; -fx-cursor: hand; -fx-padding: 3 10;");
         } else {
-            // Red aesthetic for Errors
             messageBox.setStyle("-fx-background-color: #fdedec; -fx-padding: 6 15; -fx-background-radius: 20; -fx-border-color: #e74c3c; -fx-border-radius: 20; -fx-border-width: 1;");
             messageLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;");
         }
 
-        // Hide message automatically after 7 seconds
         if (messageTimer != null) messageTimer.stop();
         messageTimer = new PauseTransition(Duration.seconds(7));
         messageTimer.setOnFinished(e -> {
             messageBox.setVisible(false);
-            if (showUndoBtn) {
-                lastDeletedTransaction = null; // Memory cleanup
-            }
+            if (showUndoBtn) lastDeletedTransaction = null;
         });
         messageTimer.play();
     }
@@ -231,13 +224,9 @@ public class TransactionsController {
             stage.setResizable(false);
             stage.showAndWait();
 
-            // Trigger success message only if save was clicked
             if (controller.isSaved()) {
-                if (transaction == null) {
-                    showToast("Transaction added successfully", "SUCCESS", false);
-                } else {
-                    showToast("Transaction updated successfully", "SUCCESS", false);
-                }
+                if (transaction == null) showToast("Transaction added successfully", "SUCCESS", false);
+                else showToast("Transaction updated successfully", "SUCCESS", false);
                 loadTransactions();
                 loadCategoryFilter();
                 applyFilters();
@@ -266,13 +255,10 @@ public class TransactionsController {
     private void handleDelete() {
         Transaction selected = transactionTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            // Save to memory for undo
             lastDeletedTransaction = selected;
-
             transactionDAO.delete(selected.getId());
             transactionList.remove(selected);
             updateRecordCount();
-
             showToast("Transaction deleted", "DELETE", true);
         } else {
             showToast("Please select a transaction to delete first.", "ERROR", false);
@@ -282,13 +268,10 @@ public class TransactionsController {
     @FXML
     private void handleUndo() {
         if (lastDeletedTransaction != null) {
-            // Re-insert into database
             transactionDAO.add(lastDeletedTransaction);
-
             loadTransactions();
             loadCategoryFilter();
             applyFilters();
-
             showToast("Action undone. Transaction restored.", "SUCCESS", false);
             lastDeletedTransaction = null;
         }

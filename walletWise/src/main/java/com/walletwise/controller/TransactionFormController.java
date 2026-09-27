@@ -4,6 +4,8 @@ import com.walletwise.dao.CategoryDAO;
 import com.walletwise.dao.TransactionDAO;
 import com.walletwise.model.Category;
 import com.walletwise.model.Transaction;
+import com.walletwise.util.CategoryUtil;
+import com.walletwise.util.CurrencyUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -12,9 +14,7 @@ import javafx.util.StringConverter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import com.walletwise.util.CategoryUtil;
 
 public class TransactionFormController {
 
@@ -29,30 +29,17 @@ public class TransactionFormController {
     private Transaction transactionToEdit = null;
     private final TransactionDAO transactionDAO = new TransactionDAO();
     private final CategoryDAO categoryDAO = new CategoryDAO();
-
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-    // --- NEW: Tracks if the transaction was successfully saved ---
     private boolean saved = false;
 
     @FXML
     public void initialize() {
         typeCombo.setItems(FXCollections.observableArrayList("Income", "Expense"));
-
         List<String> categoryNames = CategoryUtil.getAllUniqueCategories(false);
         CategoryUtil.makeAutoComplete(categoryCombo, categoryNames);
 
         makeDatePickerTypable(datePicker);
         datePicker.setValue(LocalDate.now());
-    }
-
-    private void addUniqueCategory(List<String> list, String rawName) {
-        if (rawName == null || rawName.trim().isEmpty()) return;
-        String cleanName = rawName.substring(0, 1).toUpperCase() + rawName.substring(1).toLowerCase().trim();
-        for (String existing : list) {
-            if (existing.equalsIgnoreCase(cleanName)) return;
-        }
-        list.add(cleanName);
     }
 
     private void makeDatePickerTypable(DatePicker picker) {
@@ -64,11 +51,8 @@ public class TransactionFormController {
             @Override
             public LocalDate fromString(String string) {
                 if (string != null && !string.trim().isEmpty()) {
-                    try {
-                        return LocalDate.parse(string.trim(), dateFormatter);
-                    } catch (Exception e) {
-                        return picker.getValue();
-                    }
+                    try { return LocalDate.parse(string.trim(), dateFormatter); }
+                    catch (Exception e) { return picker.getValue(); }
                 }
                 return null;
             }
@@ -78,11 +62,8 @@ public class TransactionFormController {
             if (!newValue) {
                 try {
                     String text = picker.getEditor().getText();
-                    if (text == null || text.trim().isEmpty()) {
-                        picker.setValue(null);
-                    } else {
-                        picker.setValue(LocalDate.parse(text.trim(), dateFormatter));
-                    }
+                    if (text == null || text.trim().isEmpty()) picker.setValue(null);
+                    else picker.setValue(LocalDate.parse(text.trim(), dateFormatter));
                 } catch (Exception e) {
                     picker.getEditor().setText(picker.getConverter().toString(picker.getValue()));
                 }
@@ -130,12 +111,11 @@ public class TransactionFormController {
                 }
             }
 
-            if (!categoryExists) {
-                categoryDAO.add(new Category(categoryName, type));
-            }
+            if (!categoryExists) categoryDAO.add(new Category(categoryName, type));
 
             if (transactionToEdit == null) {
-                Transaction newTx = new Transaction(amount, type, categoryName, desc, date, "BDT");
+                String code = CurrencyUtil.getCurrencyCode();
+                Transaction newTx = new Transaction(amount, type, categoryName, desc, date, code);
                 transactionDAO.add(newTx);
             } else {
                 transactionToEdit.setAmount(amount);
@@ -146,7 +126,6 @@ public class TransactionFormController {
                 transactionDAO.update(transactionToEdit);
             }
 
-            // --- NEW: Mark as successfully saved before closing ---
             this.saved = true;
             closeWindow();
 
@@ -164,7 +143,6 @@ public class TransactionFormController {
         Stage stage = (Stage) titleLabel.getScene().getWindow();
         stage.close();
     }
-
 
     public boolean isSaved() {
         return saved;

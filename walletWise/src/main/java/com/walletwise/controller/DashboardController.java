@@ -2,6 +2,7 @@ package com.walletwise.controller;
 
 import com.walletwise.dao.TransactionDAO;
 import com.walletwise.model.Transaction;
+import com.walletwise.util.CurrencyUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -65,7 +66,6 @@ public class DashboardController {
             }
         });
 
-        // Set Default View
         timeFilterCombo.setValue("This Month");
     }
 
@@ -121,7 +121,6 @@ public class DashboardController {
     }
 
     private void updateDashboardMetrics(LocalDate start, LocalDate end) {
-        // 1. Update the Date Range Helper Text
         if (start == null && end == null) {
             dateRangeLabel.setText("(From the beginning to today)");
         } else if (start != null && end != null) {
@@ -132,7 +131,6 @@ public class DashboardController {
             dateRangeLabel.setText("(Until " + end.format(prettyFormatter) + ")");
         }
 
-        // 2. Fetch and calculate data
         List<Transaction> allTransactions = transactionDAO.getAll();
         double totalIncome = 0;
         double totalExpense = 0;
@@ -153,11 +151,11 @@ public class DashboardController {
             }
         }
 
-        // 3. Populate Summary Cards
+        String sym = CurrencyUtil.getCurrencySymbol();
         double netSavings = totalIncome - totalExpense;
-        incomeLabel.setText(String.format("৳%,.2f", totalIncome));
-        expenseLabel.setText(String.format("৳%,.2f", totalExpense));
-        savingsLabel.setText(String.format("৳%,.2f", netSavings));
+        incomeLabel.setText(String.format("%s%,.2f", sym, totalIncome));
+        expenseLabel.setText(String.format("%s%,.2f", sym, totalExpense));
+        savingsLabel.setText(String.format("%s%,.2f", sym, netSavings));
 
         if (netSavings < 0) {
             savingsLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;");
@@ -165,7 +163,6 @@ public class DashboardController {
             savingsLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2980b9;");
         }
 
-        // 4. Find Top Spending Category
         String topCategory = "N/A";
         double highestAmount = 0;
         for (Map.Entry<String, Double> entry : expenseByCategory.entrySet()) {
@@ -177,13 +174,12 @@ public class DashboardController {
 
         if (highestAmount > 0) {
             topCategoryLabel.setText(topCategory);
-            topCategoryAmountLabel.setText(String.format("৳%,.2f spent", highestAmount));
+            topCategoryAmountLabel.setText(String.format("%s%,.2f spent", sym, highestAmount));
         } else {
             topCategoryLabel.setText("No Expenses");
-            topCategoryAmountLabel.setText("৳0.00");
+            topCategoryAmountLabel.setText(sym + "0.00");
         }
 
-        // 5. Build Bar Chart (Income vs Expense)
         incomeExpenseChart.getData().clear();
 
         double maxVal = Math.max(totalIncome, totalExpense);
@@ -208,15 +204,13 @@ public class DashboardController {
         addValueLabelToBar(incomeData);
         addValueLabelToBar(expenseData);
 
-        // 6. Build Pie Chart
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
         for (Map.Entry<String, Double> entry : expenseByCategory.entrySet()) {
-            pieChartData.add(new PieChart.Data(entry.getKey() + " (৳" + String.format("%,.0f", entry.getValue()) + ")", entry.getValue()));
+            pieChartData.add(new PieChart.Data(entry.getKey() + " (" + sym + String.format("%,.0f", entry.getValue()) + ")", entry.getValue()));
         }
 
         expensePieChart.setData(pieChartData);
 
-        // Add sleek hover tooltips for premium interactivity
         for (PieChart.Data data : expensePieChart.getData()) {
             Tooltip tooltip = new Tooltip(data.getName());
             tooltip.setStyle("-fx-font-size: 14px; -fx-padding: 5 10; -fx-background-color: #2c3e50; -fx-text-fill: white; -fx-background-radius: 4;");
@@ -225,8 +219,9 @@ public class DashboardController {
     }
 
     private void addValueLabelToBar(XYChart.Data<String, Number> data) {
+        String sym = CurrencyUtil.getCurrencySymbol();
         StackPane node = (StackPane) data.getNode();
-        Text text = new Text(String.format("৳%,.0f", data.getYValue().doubleValue()));
+        Text text = new Text(String.format("%s%,.0f", sym, data.getYValue().doubleValue()));
         text.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-fill: #34495e;");
 
         node.getChildren().add(text);

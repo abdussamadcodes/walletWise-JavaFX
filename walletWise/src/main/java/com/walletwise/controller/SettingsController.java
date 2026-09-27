@@ -17,6 +17,7 @@ import com.walletwise.dao.SettingsDAO;
 import com.walletwise.dao.TransactionDAO;
 import com.walletwise.model.Transaction;
 import com.walletwise.util.CategoryUtil;
+import com.walletwise.util.CurrencyUtil;
 import com.walletwise.util.SecurityUtil;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -47,7 +48,6 @@ import java.util.stream.Collectors;
 
 public class SettingsController {
 
-    // --- SECURITY & BACKUP FIELDS ---
     @FXML private CheckBox autoBackupCheck;
     @FXML private PasswordField currentPassField;
     @FXML private PasswordField passField1;
@@ -55,7 +55,6 @@ public class SettingsController {
     @FXML private Label securityStatusLabel;
     private final SettingsDAO settingsDAO = new SettingsDAO();
 
-    // --- EXPORT/IMPORT FIELDS ---
     @FXML private TextField searchField;
     @FXML private ComboBox<String> typeFilterCombo;
     @FXML private ComboBox<String> categoryFilterCombo;
@@ -116,6 +115,7 @@ public class SettingsController {
     }
 
     private void setupTableColumns() {
+        String sym = CurrencyUtil.getCurrencySymbol();
         idCol.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getId()));
         dateCol.setCellValueFactory(cellData -> {
             LocalDate date = cellData.getValue().getDate();
@@ -123,7 +123,7 @@ public class SettingsController {
         });
         typeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType()));
         categoryCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategoryName()));
-        amountCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("BDT %.2f", cellData.getValue().getAmount())));
+        amountCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("%s %.2f", sym, cellData.getValue().getAmount())));
         descCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
     }
 
@@ -208,7 +208,6 @@ public class SettingsController {
         exportStatusLabel.setText("");
     }
 
-    // --- NEW: EXPORT AS PDF METHOD ---
     @FXML
     private void handleExportPDF() {
         if (filteredData.isEmpty()) {
@@ -252,6 +251,7 @@ public class SettingsController {
                 double totalIncome = 0;
                 double totalExpense = 0;
                 Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.BLACK);
+                String code = CurrencyUtil.getCurrencyCode();
 
                 for (Transaction t : filteredData) {
                     PdfPCell idCell = new PdfPCell(new Phrase(String.valueOf(t.getId()), dataFont));
@@ -261,7 +261,7 @@ public class SettingsController {
                     table.addCell(new Phrase(t.getDate() != null ? dateFormatter.format(t.getDate()) : "", dataFont));
                     table.addCell(new Phrase(t.getType(), dataFont));
                     table.addCell(new Phrase(t.getCategoryName(), dataFont));
-                    table.addCell(new Phrase(String.format("BDT %.2f", t.getAmount()), dataFont));
+                    table.addCell(new Phrase(String.format("%s %.2f", code, t.getAmount()), dataFont));
                     table.addCell(new Phrase(t.getDescription() != null ? t.getDescription() : "", dataFont));
 
                     if ("Income".equalsIgnoreCase(t.getType())) {
@@ -278,21 +278,19 @@ public class SettingsController {
                 Font summaryValueFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, Color.BLACK);
 
                 Paragraph summary = new Paragraph();
-
-                // --- FIX: Use setSpacingBefore instead of setSpacingTop ---
                 summary.setSpacingBefore(20f);
 
                 summary.add(new Phrase("Total Income: ", summaryLabelFont));
-                summary.add(new Phrase(String.format("BDT %.2f\n", totalIncome), summaryValueFont));
+                summary.add(new Phrase(String.format("%s %.2f\n", code, totalIncome), summaryValueFont));
 
                 summary.add(new Phrase("Total Expense: ", summaryLabelFont));
-                summary.add(new Phrase(String.format("BDT %.2f\n", totalExpense), summaryValueFont));
+                summary.add(new Phrase(String.format("%s %.2f\n", code, totalExpense), summaryValueFont));
 
                 summary.add(new Phrase("Current Balance: ", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, Color.BLACK)));
 
                 Color balanceColor = balance >= 0 ? new Color(39, 174, 96) : new Color(231, 76, 60);
                 Font balanceFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, balanceColor);
-                summary.add(new Phrase(String.format("BDT %.2f", balance), balanceFont));
+                summary.add(new Phrase(String.format("%s %.2f", code, balance), balanceFont));
 
                 document.add(summary);
                 document.close();
@@ -324,6 +322,7 @@ public class SettingsController {
         File file = fileChooser.showSaveDialog(searchField.getScene().getWindow());
         if (file != null) {
             try {
+                String code = CurrencyUtil.getCurrencyCode();
                 List<TransactionExportDTO> exportList = filteredData.stream()
                         .map(t -> new TransactionExportDTO(
                                 t.getAmount(),
@@ -331,7 +330,7 @@ public class SettingsController {
                                 t.getCategoryName(),
                                 t.getDescription(),
                                 t.getDate() != null ? dateFormatter.format(t.getDate()) : "",
-                                "BDT"
+                                code
                         )).collect(Collectors.toList());
 
                 mapper.writeValue(file, exportList);
@@ -386,7 +385,7 @@ public class SettingsController {
                         Transaction newTx = new Transaction(
                                 dto.getAmount(), dto.getType(), category,
                                 dto.getDescription() != null ? dto.getDescription().trim() : "",
-                                parsedDate, dto.getCurrency() != null ? dto.getCurrency() : "BDT"
+                                parsedDate, dto.getCurrency() != null ? dto.getCurrency() : CurrencyUtil.getCurrencyCode()
                         );
                         transactionDAO.add(newTx);
                         currentList.add(newTx);
@@ -493,22 +492,12 @@ public class SettingsController {
     private String validatePasswordConstraints(String password) {
         StringBuilder errors = new StringBuilder();
 
-        if (password.length() < 8) {
-            errors.append("- At least 8 characters long\n");
-        }
-        if (!password.matches(".*[a-zA-Z].*")) {
-            errors.append("- At least one letter\n");
-        }
-        if (!password.matches(".*\\d.*")) {
-            errors.append("- At least one digit (0-9)\n");
-        }
-        if (!password.matches(".*[^a-zA-Z0-9].*")) {
-            errors.append("- At least one special character\n");
-        }
+        if (password.length() < 8) errors.append("- At least 8 characters long\n");
+        if (!password.matches(".*[a-zA-Z].*")) errors.append("- At least one letter\n");
+        if (!password.matches(".*\\d.*")) errors.append("- At least one digit (0-9)\n");
+        if (!password.matches(".*[^a-zA-Z0-9].*")) errors.append("- At least one special character\n");
 
-        if (errors.length() > 0) {
-            return "Passcode missing constraints:\n" + errors.toString().trim();
-        }
+        if (errors.length() > 0) return "Passcode missing constraints:\n" + errors.toString().trim();
         return null;
     }
 
@@ -550,9 +539,7 @@ public class SettingsController {
             Platform.runLater(pwd::requestFocus);
 
             dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == confirmButtonType) {
-                    return pwd.getText();
-                }
+                if (dialogButton == confirmButtonType) return pwd.getText();
                 return null;
             });
 
@@ -612,7 +599,6 @@ public class SettingsController {
             stmt.execute("DELETE FROM categories");
             stmt.execute("DELETE FROM budget_limits");
             stmt.execute("DELETE FROM app_settings");
-
             stmt.execute("DELETE FROM sqlite_sequence");
 
             stmt.execute("INSERT INTO categories (name, type) VALUES " +
@@ -622,15 +608,25 @@ public class SettingsController {
                     "('Transport', 'Expense'), " +
                     "('Utilities', 'Expense');");
 
-            refreshTransactionsData();
-            loadCategories();
-            autoBackupCheck.setSelected(false);
-            currentPassField.clear();
-            passField1.clear();
-            passField2.clear();
+            Platform.runLater(() -> {
+                try {
+                    javafx.stage.Stage stage = (javafx.stage.Stage) securityStatusLabel.getScene().getWindow();
+                    javafx.scene.Parent root = javafx.fxml.FXMLLoader.load(getClass().getResource("/fxml/WelcomeGuideLayout.fxml"));
+                    stage.setTitle("Welcome to WalletWise");
 
-            securityStatusLabel.setText("App successfully reset to factory defaults.");
-            securityStatusLabel.setStyle("-fx-text-fill: #27ae60;");
+                    // Match the tight boundaries defined in Main.java
+                    stage.setScene(new javafx.scene.Scene(root, 650, 550));
+                    stage.setMinWidth(600);
+                    stage.setMinHeight(500);
+
+                    // Un-maximize so it returns to a neat popup size
+                    stage.setMaximized(false);
+                    stage.setResizable(true);
+                    stage.centerOnScreen();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
 
         } catch (Exception e) {
             securityStatusLabel.setText("Reset failed: " + e.getMessage());

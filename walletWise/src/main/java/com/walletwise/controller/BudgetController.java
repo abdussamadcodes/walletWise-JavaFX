@@ -7,6 +7,7 @@ import com.walletwise.model.Budget;
 import com.walletwise.model.Category;
 import com.walletwise.model.Transaction;
 import com.walletwise.util.CategoryUtil;
+import com.walletwise.util.CurrencyUtil;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,7 +18,6 @@ import javafx.scene.layout.StackPane;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,13 +46,15 @@ public class BudgetController {
     }
 
     private void setupTable() {
+        String sym = CurrencyUtil.getCurrencySymbol();
+
         categoryCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCategory()));
-        limitCol.setCellValueFactory(data -> new SimpleStringProperty(String.format("৳%.2f", data.getValue().getLimit())));
-        spentCol.setCellValueFactory(data -> new SimpleStringProperty(String.format("৳%.2f", data.getValue().getSpent())));
+        limitCol.setCellValueFactory(data -> new SimpleStringProperty(String.format("%s%.2f", sym, data.getValue().getLimit())));
+        spentCol.setCellValueFactory(data -> new SimpleStringProperty(String.format("%s%.2f", sym, data.getValue().getSpent())));
 
         remainingCol.setCellValueFactory(data -> {
             double remaining = data.getValue().getRemaining();
-            return new SimpleStringProperty(remaining < 0 ? String.format("-৳%.2f", Math.abs(remaining)) : String.format("৳%.2f", remaining));
+            return new SimpleStringProperty(remaining < 0 ? String.format("-%s%.2f", sym, Math.abs(remaining)) : String.format("%s%.2f", sym, remaining));
         });
 
         progressCol.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getProgressRatio()).asObject());
@@ -89,18 +91,7 @@ public class BudgetController {
         });
     }
 
-    // --- NEW HELPER METHOD TO PREVENT DUPLICATES ---
-    private void addUniqueCategory(List<String> list, String rawName) {
-        if (rawName == null || rawName.trim().isEmpty()) return;
-        String cleanName = rawName.substring(0, 1).toUpperCase() + rawName.substring(1).toLowerCase().trim();
-        for (String existing : list) {
-            if (existing.equalsIgnoreCase(cleanName)) return;
-        }
-        list.add(cleanName);
-    }
-
     private void loadCategories() {
-        // Only load expenses for the budget
         List<String> expenseCategories = CategoryUtil.getExpenseCategories();
         CategoryUtil.makeAutoComplete(categoryCombo, expenseCategories);
     }
