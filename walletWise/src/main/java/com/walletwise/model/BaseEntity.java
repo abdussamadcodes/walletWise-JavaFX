@@ -1,9 +1,6 @@
 package com.walletwise.model;
 
-/**
- * Advanced OOP: Abstract Class.
- * Prevents repeating the 'id' field in every model.
- */
+
 public abstract class BaseEntity {
     protected int id;
 

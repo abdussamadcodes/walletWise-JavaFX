@@ -13,11 +13,11 @@
             fx:controller="com.walletwise.controller.MainController">
 
     <left>
-        <!-- Upgraded Sidebar with a deeper color and subtle shadow -->
+
         <VBox fx:id="sidebar" spacing="10" style="-fx-background-color: #1a252f; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);">
             <padding><Insets top="40" right="20" bottom="30" left="20"/></padding>
 
-            <!-- Premium Branded Logo -->
+
             <HBox alignment="CENTER_LEFT" spacing="2">
                 <VBox.margin>
                     <Insets bottom="30" left="10"/>
