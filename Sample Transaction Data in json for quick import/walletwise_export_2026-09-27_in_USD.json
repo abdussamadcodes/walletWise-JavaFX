@@ -1,0 +1,242 @@
+[
+  {
+    "amount": 6895.52,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Freelance project",
+    "date": "30-09-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 1466.41,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Restaurant dinner",
+    "date": "18-05-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 1467.25,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Shoes",
+    "date": "02-02-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 479.02,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Equipment lease",
+    "date": "10-06-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 1105.75,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Movie tickets",
+    "date": "09-06-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 568.75,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Office rent",
+    "date": "03-10-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 1122.53,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Coffee",
+    "date": "20-12-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 1177.76,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Flight booking",
+    "date": "20-07-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 701.4,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Water bill",
+    "date": "10-05-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 44.49,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Phone recharge",
+    "date": "07-06-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 1285.42,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Phone recharge",
+    "date": "05-10-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 6639.32,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Year-end bonus",
+    "date": "08-08-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 4152.0,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Real estate",
+    "date": "17-05-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 1139.1,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Water bill",
+    "date": "23-10-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 6060.35,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Festival bonus",
+    "date": "03-07-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 1144.11,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Dental checkup",
+    "date": "02-03-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 724.86,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Exam fees",
+    "date": "05-06-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 1191.96,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Dental checkup",
+    "date": "27-09-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 736.08,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Phone recharge",
+    "date": "21-08-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 260.23,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Gifts for family",
+    "date": "13-05-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 1416.21,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Home appliances",
+    "date": "25-08-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 1306.28,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Gas bill",
+    "date": "05-01-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 164.94,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Equipment lease",
+    "date": "19-07-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 115.23,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Notebooks and pens",
+    "date": "10-11-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 553.73,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Train ticket",
+    "date": "24-08-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 764.17,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Dental checkup",
+    "date": "31-08-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 420.8,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Netflix subscription",
+    "date": "21-04-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 200.6,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Pharmacy medicines",
+    "date": "15-05-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 230.84,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Groceries",
+    "date": "25-02-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 557.42,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Fruits and veggies",
+    "date": "03-06-2026",
+    "currency": "USD"
+  }
+]

@@ -1,0 +1,242 @@
+[
+  {
+    "amount": 7784.62,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Birthday gift",
+    "date": "18-05-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1401.49,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Festival bonus",
+    "date": "04-08-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 7362.88,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Real estate",
+    "date": "12-01-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 760.13,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Exam fees",
+    "date": "04-07-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 868.85,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Teaching",
+    "date": "03-08-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 2743.48,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Festival bonus",
+    "date": "21-12-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1266.58,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Fruits and veggies",
+    "date": "13-03-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1228.35,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Part-time job",
+    "date": "07-08-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 689.48,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bus fare",
+    "date": "16-03-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 7583.36,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Crypto sale",
+    "date": "12-05-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1291.5,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Flight booking",
+    "date": "24-10-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 546.72,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Lunch at work",
+    "date": "22-10-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 890.59,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Performance bonus",
+    "date": "23-01-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 5347.79,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Friend repaid debt",
+    "date": "24-10-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 891.69,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "30-12-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 2082.05,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Performance bonus",
+    "date": "05-02-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1256.93,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Notebooks and pens",
+    "date": "13-11-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1087.5,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Dental checkup",
+    "date": "01-02-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 2827.51,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "From job",
+    "date": "07-11-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1399.26,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Gifts for family",
+    "date": "01-01-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1411.73,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Gas bill",
+    "date": "11-01-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 533.53,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Movie tickets",
+    "date": "18-01-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1142.23,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Performance bonus",
+    "date": "24-09-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 407.37,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Phone recharge",
+    "date": "20-01-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 5212.79,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Performance bonus",
+    "date": "26-05-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 5622.46,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Festival bonus",
+    "date": "05-01-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 3612.3,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Anniversary gift",
+    "date": "25-05-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1026.76,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Coffee",
+    "date": "28-03-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 3675.65,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Birthday gift",
+    "date": "13-03-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 5630.74,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Anniversary gift",
+    "date": "03-02-2026",
+    "currency": "EUR"
+  }
+]

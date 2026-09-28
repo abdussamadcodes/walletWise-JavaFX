@@ -1,0 +1,242 @@
+[
+  {
+    "amount": 1192.56,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Gas bill",
+    "date": "07-08-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 747.31,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Online course subscription",
+    "date": "18-05-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 802.39,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Groceries",
+    "date": "03-02-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 914.33,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Groceries",
+    "date": "13-04-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 276.83,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Phone recharge",
+    "date": "04-07-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 170.48,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Internet bill",
+    "date": "26-09-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 3693.41,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Performance bonus",
+    "date": "01-03-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 398.26,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Gaming",
+    "date": "19-09-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 5891.59,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Year-end bonus",
+    "date": "04-01-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 5954.44,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Freelance project",
+    "date": "06-04-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 609.79,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Consulting",
+    "date": "26-05-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 311.51,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Water bill",
+    "date": "11-06-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 731.93,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Consulting",
+    "date": "08-02-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 293.04,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Lunch at work",
+    "date": "22-07-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 417.09,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bus fare",
+    "date": "25-04-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 977.2,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Internet bill",
+    "date": "10-07-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 541.71,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Notebooks and pens",
+    "date": "15-06-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1031.03,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bus fare",
+    "date": "08-05-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 5946.31,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Stock dividend",
+    "date": "09-05-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 739.46,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Groceries",
+    "date": "19-04-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1249.46,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "12-01-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1024.53,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Train ticket",
+    "date": "04-02-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 3554.71,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Teaching",
+    "date": "01-04-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 924.87,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "16-01-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1446.04,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Friend repaid debt",
+    "date": "09-02-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1021.0,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Gas bill",
+    "date": "19-04-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 6415.11,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Anniversary gift",
+    "date": "08-06-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1137.98,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Groceries",
+    "date": "11-05-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 213.4,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Office rent",
+    "date": "10-10-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 758.21,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Office rent",
+    "date": "19-03-2025",
+    "currency": "AUD"
+  }
+]
