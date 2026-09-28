@@ -11,18 +11,18 @@ public class DatabaseInitializer {
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
 
-            // Enable foreign keys for SQLite
             stmt.execute("PRAGMA foreign_keys = ON;");
 
             // 1. Categories Table
+            // Changed to make 'name' explicitly UNIQUE so it can act as a Foreign Key target
             stmt.execute("CREATE TABLE IF NOT EXISTS categories (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "name TEXT NOT NULL, " +
-                    "type TEXT NOT NULL, " + // 'Income' or 'Expense'
-                    "UNIQUE(name, type)" +
+                    "name TEXT UNIQUE NOT NULL, " +
+                    "type TEXT NOT NULL" +
                     ");");
 
             // 2. Transactions Table
+            // Added FOREIGN KEY referencing categories(name)
             stmt.execute("CREATE TABLE IF NOT EXISTS transactions (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "amount REAL NOT NULL, " +
@@ -30,22 +30,23 @@ public class DatabaseInitializer {
                     "category_name TEXT NOT NULL, " +
                     "description TEXT, " +
                     "date TEXT NOT NULL, " +
-                    "currency TEXT NOT NULL DEFAULT 'USD'" +
+                    "currency TEXT NOT NULL DEFAULT 'USD', " +
+                    "FOREIGN KEY (category_name) REFERENCES categories(name) ON UPDATE CASCADE ON DELETE RESTRICT" +
                     ");");
 
-            // 3. Budgets Table
-            stmt.execute("CREATE TABLE IF NOT EXISTS budgets (" +
+            // 3. Budgets Table (Renamed to budget_limits to match BudgetDAO)
+            // Added FOREIGN KEY referencing categories(name)
+            stmt.execute("CREATE TABLE IF NOT EXISTS budget_limits (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "month_year TEXT NOT NULL, " + // Format: YYYY-MM
-                    "category_name TEXT NOT NULL, " +
-                    "amount REAL NOT NULL, " +
-                    "UNIQUE(month_year, category_name)" +
+                    "category_name TEXT UNIQUE NOT NULL, " +
+                    "limit_amount REAL NOT NULL, " +
+                    "FOREIGN KEY (category_name) REFERENCES categories(name) ON UPDATE CASCADE ON DELETE CASCADE" +
                     ");");
 
-            // 4. Settings Table (For optional PIN lock)
-            stmt.execute("CREATE TABLE IF NOT EXISTS settings (" +
-                    "key TEXT PRIMARY KEY, " +
-                    "value TEXT NOT NULL" +
+            // 4. Settings Table (Renamed to app_settings to match SettingsDAO)
+            stmt.execute("CREATE TABLE IF NOT EXISTS app_settings (" +
+                    "setting_key TEXT PRIMARY KEY, " +
+                    "setting_value TEXT NOT NULL" +
                     ");");
 
             // Insert default categories to get you started easily
@@ -56,7 +57,7 @@ public class DatabaseInitializer {
                     "('Transport', 'Expense'), " +
                     "('Utilities', 'Expense');");
 
-            System.out.println("Database initialized successfully.");
+            System.out.println("Database initialized successfully with Foreign Keys.");
 
         } catch (SQLException e) {
             System.err.println("Database initialization failed: " + e.getMessage());
