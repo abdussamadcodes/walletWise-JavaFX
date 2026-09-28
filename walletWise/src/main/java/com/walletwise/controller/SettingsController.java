@@ -216,9 +216,12 @@ public class SettingsController {
             return;
         }
 
+        String code = CurrencyUtil.getCurrencyCode();
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Transactions PDF Report");
-        fileChooser.setInitialFileName("walletwise_report_" + LocalDate.now() + ".pdf");
+        // DYNAMIC PDF FILE NAME WITH CURRENCY
+        fileChooser.setInitialFileName("walletwise_report_" + LocalDate.now() + "_in_" + code + ".pdf");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files (*.pdf)", "*.pdf"));
 
         File file = fileChooser.showSaveDialog(searchField.getScene().getWindow());
@@ -251,7 +254,6 @@ public class SettingsController {
                 double totalIncome = 0;
                 double totalExpense = 0;
                 Font dataFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.BLACK);
-                String code = CurrencyUtil.getCurrencyCode();
 
                 for (Transaction t : filteredData) {
                     PdfPCell idCell = new PdfPCell(new Phrase(String.valueOf(t.getId()), dataFont));
@@ -314,15 +316,17 @@ public class SettingsController {
             return;
         }
 
+        String code = CurrencyUtil.getCurrencyCode();
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Transactions JSON");
-        fileChooser.setInitialFileName("walletwise_export_" + LocalDate.now() + ".json");
+        // DYNAMIC JSON FILE NAME WITH CURRENCY
+        fileChooser.setInitialFileName("walletwise_export_" + LocalDate.now() + "_in_" + code + ".json");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files (*.json)", "*.json"));
 
         File file = fileChooser.showSaveDialog(searchField.getScene().getWindow());
         if (file != null) {
             try {
-                String code = CurrencyUtil.getCurrencyCode();
                 List<TransactionExportDTO> exportList = filteredData.stream()
                         .map(t -> new TransactionExportDTO(
                                 t.getAmount(),
@@ -353,8 +357,20 @@ public class SettingsController {
         if (file != null) {
             try {
                 List<TransactionExportDTO> importedList = mapper.readValue(file, new TypeReference<List<TransactionExportDTO>>() {});
-                List<Transaction> currentList = transactionDAO.getAll();
 
+                String systemCurrency = CurrencyUtil.getCurrencyCode();
+                boolean currencyMismatch = importedList.stream().anyMatch(dto ->
+                        dto.getCurrency() != null && !dto.getCurrency().isEmpty() && !dto.getCurrency().equalsIgnoreCase(systemCurrency)
+                );
+
+                if (currencyMismatch) {
+                    showPremiumCurrencyWarning(systemCurrency);
+                    importStatusLabel.setText("Import cancelled: Currency mismatch.");
+                    importStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
+                    return;
+                }
+
+                List<Transaction> currentList = transactionDAO.getAll();
                 int importedCount = 0;
                 int duplicateCount = 0;
 
@@ -385,7 +401,7 @@ public class SettingsController {
                         Transaction newTx = new Transaction(
                                 dto.getAmount(), dto.getType(), category,
                                 dto.getDescription() != null ? dto.getDescription().trim() : "",
-                                parsedDate, dto.getCurrency() != null ? dto.getCurrency() : CurrencyUtil.getCurrencyCode()
+                                parsedDate, systemCurrency
                         );
                         transactionDAO.add(newTx);
                         currentList.add(newTx);
@@ -400,10 +416,48 @@ public class SettingsController {
                 importStatusLabel.setStyle(importedCount > 0 ? "-fx-text-fill: #27ae60;" : "-fx-text-fill: #f39c12;");
 
             } catch (Exception e) {
-                importStatusLabel.setText("Import Error: " + e.getMessage());
+                importStatusLabel.setText("Import Error: Invalid or corrupted file.");
                 importStatusLabel.setStyle("-fx-text-fill: #e74c3c;");
             }
         }
+    }
+
+    private void showPremiumCurrencyWarning(String systemCurrency) {
+        Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.setTitle("Import Failed");
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getButtonTypes().add(ButtonType.OK);
+
+        dialogPane.setStyle("-fx-background-color: white; -fx-border-color: #e74c3c; -fx-border-width: 4 0 0 0;");
+
+        VBox content = new VBox();
+        content.setSpacing(12);
+        content.setPadding(new Insets(20));
+        content.setPrefWidth(420);
+
+        Label warningHeader = new Label("Currency Mismatch Detected");
+        warningHeader.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #c0392b;");
+
+        Label warningText = new Label(
+                "Your WalletWise is currently configured for " + systemCurrency + ".\n\n" +
+                        "The JSON file you are attempting to import contains transactions recorded in a different currency. " +
+                        "To prevent inaccurate calculations and corrupted charts, this import has been blocked.\n\n" +
+                        "Please select a file matching your preferred currency."
+        );
+        warningText.setWrapText(true);
+        warningText.setMinHeight(javafx.scene.layout.Region.USE_PREF_SIZE);
+        warningText.setStyle("-fx-text-fill: #34495e; -fx-font-size: 14px; -fx-line-spacing: 4px;");
+
+        content.getChildren().addAll(warningHeader, warningText);
+        dialogPane.setContent(content);
+
+        Button okButton = (Button) dialogPane.lookupButton(ButtonType.OK);
+        if (okButton != null) {
+            okButton.setStyle("-fx-background-color: #34495e; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 20; -fx-background-radius: 6;");
+        }
+
+        alert.showAndWait();
     }
 
     @FXML
@@ -510,15 +564,19 @@ public class SettingsController {
             dialog.setTitle("Authentication Required");
 
             DialogPane dialogPane = dialog.getDialogPane();
-            dialogPane.setStyle("-fx-background-color: white;");
+            dialogPane.setStyle("-fx-background-color: white; -fx-border-color: #2980b9; -fx-border-width: 4 0 0 0;");
 
             VBox content = new VBox();
-            content.setSpacing(15);
-            content.setPadding(new Insets(20, 20, 10, 20));
+            content.setSpacing(12);
+            content.setPadding(new Insets(20));
+            content.setPrefWidth(400);
 
             Label header = new Label("App is locked.");
             header.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-            Label instructions = new Label("Enter your current passcode to authorize reset:");
+
+            Label instructions = new Label("Enter your current passcode to authorize the factory reset.");
+            instructions.setWrapText(true);
+            instructions.setMinHeight(javafx.scene.layout.Region.USE_PREF_SIZE);
             instructions.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 14px;");
 
             PasswordField pwd = new PasswordField();
@@ -532,9 +590,10 @@ public class SettingsController {
             dialogPane.getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
 
             Button confirmBtn = (Button) dialogPane.lookupButton(confirmButtonType);
-            confirmBtn.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 6 15; -fx-background-radius: 5;");
+            confirmBtn.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 20; -fx-background-radius: 6;");
+
             Button cancelBtn = (Button) dialogPane.lookupButton(ButtonType.CANCEL);
-            cancelBtn.setStyle("-fx-background-color: #bdc3c7; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 6 15; -fx-background-radius: 5;");
+            cancelBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #95a5a6; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 20; -fx-border-color: #bdc3c7; -fx-border-radius: 6;");
 
             Platform.runLater(pwd::requestFocus);
 
@@ -556,34 +615,37 @@ public class SettingsController {
             }
         }
 
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+        Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setTitle("Factory Reset");
-        alert.setHeaderText(null);
 
         DialogPane alertPane = alert.getDialogPane();
-        alertPane.setStyle("-fx-background-color: white;");
+        alertPane.setStyle("-fx-background-color: white; -fx-border-color: #c0392b; -fx-border-width: 4 0 0 0;");
 
         VBox alertContent = new VBox();
-        alertContent.setSpacing(15);
-        alertContent.setPadding(new Insets(10, 10, 10, 10));
+        alertContent.setSpacing(12);
+        alertContent.setPadding(new Insets(20));
+        alertContent.setPrefWidth(420);
 
-        Label warningHeader = new Label("WARNING: Permanent Data Deletion");
+        Label warningHeader = new Label("Permanent Data Deletion");
         warningHeader.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #c0392b;");
 
-        Label warningText = new Label("Are you absolutely sure you want to reset WalletWise?\n\nThis will permanently delete all transactions, budgets,\ncategories, and settings. This action cannot be undone.");
-        warningText.setStyle("-fx-text-fill: #2c3e50; -fx-font-size: 14px;");
+        Label warningText = new Label("Are you absolutely sure you want to reset WalletWise?\n\nThis will permanently delete all transactions, budgets, categories, and settings. This action cannot be undone.");
+        warningText.setWrapText(true);
+        warningText.setMinHeight(javafx.scene.layout.Region.USE_PREF_SIZE);
+        warningText.setStyle("-fx-text-fill: #34495e; -fx-font-size: 14px; -fx-line-spacing: 4px;");
 
         alertContent.getChildren().addAll(warningHeader, warningText);
         alertPane.setContent(alertContent);
 
         alertPane.getButtonTypes().clear();
-        ButtonType resetBtnType = new ButtonType("Yes, Reset Everything", ButtonBar.ButtonData.OK_DONE);
+        ButtonType resetBtnType = new ButtonType("Reset Everything", ButtonBar.ButtonData.OK_DONE);
         alertPane.getButtonTypes().addAll(resetBtnType, ButtonType.CANCEL);
 
         Button resetBtn = (Button) alertPane.lookupButton(resetBtnType);
-        resetBtn.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 6 15; -fx-background-radius: 5;");
+        resetBtn.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 20; -fx-background-radius: 6;");
+
         Button alertCancelBtn = (Button) alertPane.lookupButton(ButtonType.CANCEL);
-        alertCancelBtn.setStyle("-fx-background-color: #bdc3c7; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 6 15; -fx-background-radius: 5;");
+        alertCancelBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #95a5a6; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 20; -fx-border-color: #bdc3c7; -fx-border-radius: 6;");
 
         Optional<ButtonType> confirmation = alert.showAndWait();
         if (confirmation.isPresent() && confirmation.get() == resetBtnType) {
@@ -614,12 +676,10 @@ public class SettingsController {
                     javafx.scene.Parent root = javafx.fxml.FXMLLoader.load(getClass().getResource("/fxml/WelcomeGuideLayout.fxml"));
                     stage.setTitle("Welcome to WalletWise");
 
-                    // Match the tight boundaries defined in Main.java
                     stage.setScene(new javafx.scene.Scene(root, 650, 550));
                     stage.setMinWidth(600);
                     stage.setMinHeight(500);
 
-                    // Un-maximize so it returns to a neat popup size
                     stage.setMaximized(false);
                     stage.setResizable(true);
                     stage.centerOnScreen();
