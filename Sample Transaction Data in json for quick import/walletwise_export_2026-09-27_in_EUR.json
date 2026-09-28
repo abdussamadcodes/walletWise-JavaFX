@@ -1,0 +1,242 @@
+[
+  {
+    "amount": 1350,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bus fare",
+    "date": "23-04-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1480,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Gym membership",
+    "date": "20-03-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1330,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Office rent",
+    "date": "27-04-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 2610,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Stock dividend",
+    "date": "18-05-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 2950,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Teaching",
+    "date": "07-09-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 290,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Water bill",
+    "date": "09-02-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1100,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Internet bill",
+    "date": "02-05-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 6100,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Teaching",
+    "date": "30-09-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 4270,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Mutual funds yield",
+    "date": "02-10-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1350,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Flight booking",
+    "date": "15-06-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 160,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Clothes",
+    "date": "15-09-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 790,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Restaurant dinner",
+    "date": "09-07-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 360,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "16-04-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1340,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Dental checkup",
+    "date": "30-04-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 530,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Water bill",
+    "date": "05-08-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1070,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Gas bill",
+    "date": "30-01-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 230,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Snacks",
+    "date": "26-02-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 110,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Home appliances",
+    "date": "17-05-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 910,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Fruits and veggies",
+    "date": "02-12-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1460,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Water bill",
+    "date": "03-09-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1040,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Part-time job",
+    "date": "14-05-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 520,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Exam fees",
+    "date": "18-05-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1390,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Gas bill",
+    "date": "16-05-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 350,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "12-03-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 1110,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Gifts for family",
+    "date": "22-05-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 810,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Real estate",
+    "date": "20-01-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 150,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "15-08-2026",
+    "currency": "EUR"
+  },
+  {
+    "amount": 530,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Uber ride",
+    "date": "19-04-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 4330,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Year-end bonus",
+    "date": "10-07-2025",
+    "currency": "EUR"
+  },
+  {
+    "amount": 7270,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Teaching",
+    "date": "12-06-2025",
+    "currency": "EUR"
+  }
+]

@@ -1,0 +1,242 @@
+[
+  {
+    "amount": 3150,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Freelance project",
+    "date": "28-03-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 1670,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Anniversary gift",
+    "date": "23-10-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 570,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Fruits and veggies",
+    "date": "09-12-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 1170,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bus fare",
+    "date": "24-03-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 3650,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Freelance project",
+    "date": "05-07-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 1000,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Movie tickets",
+    "date": "27-07-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 590,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Gifts for family",
+    "date": "27-02-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 4270,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Year-end bonus",
+    "date": "15-03-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 3940,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Teaching",
+    "date": "05-01-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 1450,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "10-01-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 4900,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Friend repaid debt",
+    "date": "20-03-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 1160,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Electronics",
+    "date": "27-02-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 1320,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Internet bill",
+    "date": "14-04-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 1390,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Shoes",
+    "date": "06-03-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 1270,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Crypto sale",
+    "date": "04-02-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 520,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Online course subscription",
+    "date": "29-07-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 2990,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Performance bonus",
+    "date": "17-01-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 920,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Fuel for car",
+    "date": "16-12-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 70,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Netflix subscription",
+    "date": "23-06-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 160,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "09-06-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 2230,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Friend repaid debt",
+    "date": "26-05-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 720,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Fruits and veggies",
+    "date": "05-04-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 450,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Restaurant dinner",
+    "date": "23-04-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 1480,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Home appliances",
+    "date": "10-07-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 650,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Dental checkup",
+    "date": "23-05-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 3450,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Consulting",
+    "date": "04-07-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 7050,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Crypto sale",
+    "date": "13-02-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 750,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Movie tickets",
+    "date": "10-09-2026",
+    "currency": "USD"
+  },
+  {
+    "amount": 1050,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bus fare",
+    "date": "13-04-2025",
+    "currency": "USD"
+  },
+  {
+    "amount": 940,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Phone recharge",
+    "date": "09-04-2026",
+    "currency": "USD"
+  }
+]

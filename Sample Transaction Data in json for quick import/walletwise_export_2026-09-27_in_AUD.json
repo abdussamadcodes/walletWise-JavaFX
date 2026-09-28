@@ -1,0 +1,242 @@
+[
+  {
+    "amount": 1260,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Movie tickets",
+    "date": "07-03-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1010,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Uber ride",
+    "date": "12-05-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 3700,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Mutual funds yield",
+    "date": "27-06-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 940,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Groceries",
+    "date": "30-01-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 240,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Pharmacy medicines",
+    "date": "12-05-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1120,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Gas bill",
+    "date": "21-08-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 420,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Doctor consultation",
+    "date": "10-04-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 90,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Lunch at work",
+    "date": "23-03-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 760,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Doctor consultation",
+    "date": "05-09-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 500,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Books",
+    "date": "30-05-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1280,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Netflix subscription",
+    "date": "21-09-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1250,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Dental checkup",
+    "date": "06-11-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 890,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Clothes",
+    "date": "17-09-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 550,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Notebooks and pens",
+    "date": "08-03-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 4290,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Festival bonus",
+    "date": "24-08-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 970,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Netflix subscription",
+    "date": "10-09-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1210,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Equipment lease",
+    "date": "26-05-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 750,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Home appliances",
+    "date": "27-02-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 960,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Year-end bonus",
+    "date": "29-07-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 5420,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Performance bonus",
+    "date": "25-08-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1820,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Mutual funds yield",
+    "date": "30-01-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1160,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Gaming",
+    "date": "23-02-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1220,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Doctor consultation",
+    "date": "28-05-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 290,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "House rent",
+    "date": "14-03-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 670,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Concert",
+    "date": "13-05-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 270,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "19-09-2026",
+    "currency": "AUD"
+  },
+  {
+    "amount": 440,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bike maintenance",
+    "date": "04-09-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 1500,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Phone recharge",
+    "date": "20-01-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 710,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Pharmacy medicines",
+    "date": "08-05-2025",
+    "currency": "AUD"
+  },
+  {
+    "amount": 6620,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "From job",
+    "date": "03-03-2026",
+    "currency": "AUD"
+  }
+]

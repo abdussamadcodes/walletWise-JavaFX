@@ -1,0 +1,242 @@
+[
+  {
+    "amount": 7610,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Part-time job",
+    "date": "02-02-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 1170,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Gym membership",
+    "date": "23-10-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 5460,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Crypto sale",
+    "date": "11-05-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 430,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Gym membership",
+    "date": "22-05-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 720,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Pharmacy medicines",
+    "date": "11-10-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 950,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bus fare",
+    "date": "07-01-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 7920,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Mutual funds yield",
+    "date": "27-01-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 1010,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Clothes",
+    "date": "11-08-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 4490,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Year-end bonus",
+    "date": "21-07-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 3760,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Real estate",
+    "date": "24-03-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 870,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Dental checkup",
+    "date": "06-12-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 1160,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Lunch at work",
+    "date": "24-06-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 230,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Equipment lease",
+    "date": "25-07-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 1370,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Train ticket",
+    "date": "21-04-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 1340,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "House rent",
+    "date": "29-09-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 250,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Exam fees",
+    "date": "22-02-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 1420,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Electronics",
+    "date": "28-11-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 7950,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Friend repaid debt",
+    "date": "29-06-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 1410,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Phone recharge",
+    "date": "31-01-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 3260,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Birthday gift",
+    "date": "25-09-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 3650,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Performance bonus",
+    "date": "28-04-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 180,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Fruits and veggies",
+    "date": "06-04-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 1050,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Gym membership",
+    "date": "24-06-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 7220,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "From job",
+    "date": "25-12-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 7430,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Real estate",
+    "date": "27-08-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 120,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "House rent",
+    "date": "09-06-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 620,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Anniversary gift",
+    "date": "20-01-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 1480,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Amusement park",
+    "date": "22-08-2026",
+    "currency": "INR"
+  },
+  {
+    "amount": 7130,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Festival bonus",
+    "date": "23-10-2025",
+    "currency": "INR"
+  },
+  {
+    "amount": 7420,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Part-time job",
+    "date": "14-06-2026",
+    "currency": "INR"
+  }
+]

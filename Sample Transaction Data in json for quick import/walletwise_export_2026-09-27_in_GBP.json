@@ -1,0 +1,242 @@
+[
+  {
+    "amount": 1750,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Anniversary gift",
+    "date": "18-09-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 200,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Equipment lease",
+    "date": "10-05-2026",
+    "currency": "GBP"
+  },
+  {
+    "amount": 1130,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Stationery",
+    "date": "09-09-2026",
+    "currency": "GBP"
+  },
+  {
+    "amount": 410,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Online course subscription",
+    "date": "10-03-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 4530,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Anniversary gift",
+    "date": "12-06-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 1460,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Stationery",
+    "date": "27-04-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 670,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Internet bill",
+    "date": "13-03-2026",
+    "currency": "GBP"
+  },
+  {
+    "amount": 230,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Netflix subscription",
+    "date": "18-09-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 3600,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Mutual funds yield",
+    "date": "01-08-2026",
+    "currency": "GBP"
+  },
+  {
+    "amount": 560,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Train ticket",
+    "date": "28-03-2026",
+    "currency": "GBP"
+  },
+  {
+    "amount": 1010,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Exam fees",
+    "date": "19-09-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 200,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Flight booking",
+    "date": "18-02-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 7920,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Crypto sale",
+    "date": "30-07-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 4110,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Teaching",
+    "date": "08-06-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 1470,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Electronics",
+    "date": "27-11-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 1060,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Fuel for car",
+    "date": "22-04-2026",
+    "currency": "GBP"
+  },
+  {
+    "amount": 800,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Stationery",
+    "date": "13-07-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 3650,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Stock dividend",
+    "date": "10-02-2026",
+    "currency": "GBP"
+  },
+  {
+    "amount": 960,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Dental checkup",
+    "date": "09-05-2026",
+    "currency": "GBP"
+  },
+  {
+    "amount": 2750,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Friend repaid debt",
+    "date": "16-02-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 4080,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Crypto sale",
+    "date": "02-06-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 710,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Phone recharge",
+    "date": "04-06-2026",
+    "currency": "GBP"
+  },
+  {
+    "amount": 7980,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Performance bonus",
+    "date": "14-07-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 780,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bike maintenance",
+    "date": "05-04-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 4520,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "From job",
+    "date": "22-06-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 7120,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Real estate",
+    "date": "07-07-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 6060,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Real estate",
+    "date": "06-06-2026",
+    "currency": "GBP"
+  },
+  {
+    "amount": 4760,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "From job",
+    "date": "12-07-2026",
+    "currency": "GBP"
+  },
+  {
+    "amount": 1100,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Amusement park",
+    "date": "25-03-2025",
+    "currency": "GBP"
+  },
+  {
+    "amount": 1330,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Electricity bill",
+    "date": "13-02-2025",
+    "currency": "GBP"
+  }
+]

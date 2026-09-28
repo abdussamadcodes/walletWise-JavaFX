@@ -1,0 +1,242 @@
+[
+  {
+    "amount": 810,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Festival bonus",
+    "date": "07-01-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 1240,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bike maintenance",
+    "date": "14-03-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 500,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Movie tickets",
+    "date": "26-07-2026",
+    "currency": "CAD"
+  },
+  {
+    "amount": 210,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Gaming",
+    "date": "06-12-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 670,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "18-02-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 960,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Coffee",
+    "date": "28-08-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 610,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "From job",
+    "date": "27-03-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 3190,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Anniversary gift",
+    "date": "25-09-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 550,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Water bill",
+    "date": "31-05-2026",
+    "currency": "CAD"
+  },
+  {
+    "amount": 650,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Pharmacy medicines",
+    "date": "22-03-2026",
+    "currency": "CAD"
+  },
+  {
+    "amount": 1000,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Netflix subscription",
+    "date": "25-04-2026",
+    "currency": "CAD"
+  },
+  {
+    "amount": 470,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Books",
+    "date": "16-04-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 1620,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Festival bonus",
+    "date": "16-09-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 280,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Electronics",
+    "date": "10-06-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 920,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Water bill",
+    "date": "28-10-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 1280,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Gaming",
+    "date": "25-03-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 870,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Exam fees",
+    "date": "29-06-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 540,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Movie tickets",
+    "date": "22-02-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 1290,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "House rent",
+    "date": "26-07-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 940,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Doctor consultation",
+    "date": "23-06-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 920,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Restaurant dinner",
+    "date": "08-01-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 270,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Home appliances",
+    "date": "10-01-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 730,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Pharmacy medicines",
+    "date": "20-06-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 400,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bike maintenance",
+    "date": "19-05-2026",
+    "currency": "CAD"
+  },
+  {
+    "amount": 530,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Flight booking",
+    "date": "05-02-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 840,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Books",
+    "date": "02-05-2026",
+    "currency": "CAD"
+  },
+  {
+    "amount": 860,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "13-02-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 1440,
+    "type": "Expense",
+    "categoryName": "Utilities",
+    "description": "Electricity bill",
+    "date": "09-12-2025",
+    "currency": "CAD"
+  },
+  {
+    "amount": 4530,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Freelance project",
+    "date": "14-03-2026",
+    "currency": "CAD"
+  },
+  {
+    "amount": 1100,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Festival bonus",
+    "date": "01-07-2026",
+    "currency": "CAD"
+  }
+]

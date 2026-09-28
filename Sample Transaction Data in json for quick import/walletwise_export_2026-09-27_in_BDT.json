@@ -1,0 +1,242 @@
+[
+  {
+    "amount": 170,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Fuel for car",
+    "date": "05-10-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 280,
+    "type": "Expense",
+    "categoryName": "Entertainment",
+    "description": "Netflix subscription",
+    "date": "21-12-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 5680,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Crypto sale",
+    "date": "19-02-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 4390,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Friend repaid debt",
+    "date": "28-02-2026",
+    "currency": "BDT"
+  },
+  {
+    "amount": 1100,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Groceries",
+    "date": "11-01-2026",
+    "currency": "BDT"
+  },
+  {
+    "amount": 5750,
+    "type": "Income",
+    "categoryName": "Investment",
+    "description": "Stock dividend",
+    "date": "09-12-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 7580,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Festival bonus",
+    "date": "23-07-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 4050,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Anniversary gift",
+    "date": "11-01-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 450,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Exam fees",
+    "date": "24-03-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 6680,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Part-time job",
+    "date": "01-09-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 780,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Snacks",
+    "date": "23-01-2026",
+    "currency": "BDT"
+  },
+  {
+    "amount": 840,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Shoes",
+    "date": "19-05-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 1150,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Stationery",
+    "date": "01-09-2026",
+    "currency": "BDT"
+  },
+  {
+    "amount": 110,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Office rent",
+    "date": "10-11-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 7270,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Part-time job",
+    "date": "09-07-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 730,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Gym membership",
+    "date": "22-11-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 620,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Fruits and veggies",
+    "date": "08-02-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 150,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Bike maintenance",
+    "date": "28-12-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 650,
+    "type": "Expense",
+    "categoryName": "Rent",
+    "description": "Hostel fee",
+    "date": "04-04-2026",
+    "currency": "BDT"
+  },
+  {
+    "amount": 980,
+    "type": "Expense",
+    "categoryName": "Health",
+    "description": "Gym membership",
+    "date": "20-12-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 1270,
+    "type": "Expense",
+    "categoryName": "Study products",
+    "description": "Books",
+    "date": "02-03-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 750,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Clothes",
+    "date": "22-01-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 5200,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Birthday gift",
+    "date": "12-10-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 6780,
+    "type": "Income",
+    "categoryName": "Salary",
+    "description": "Consulting",
+    "date": "05-10-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 3390,
+    "type": "Income",
+    "categoryName": "Gift",
+    "description": "Anniversary gift",
+    "date": "21-06-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 1210,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Shoes",
+    "date": "19-03-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 1190,
+    "type": "Expense",
+    "categoryName": "Transport",
+    "description": "Flight booking",
+    "date": "07-01-2026",
+    "currency": "BDT"
+  },
+  {
+    "amount": 1140,
+    "type": "Expense",
+    "categoryName": "Food",
+    "description": "Lunch at work",
+    "date": "29-07-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 280,
+    "type": "Expense",
+    "categoryName": "Shopping",
+    "description": "Shoes",
+    "date": "23-04-2025",
+    "currency": "BDT"
+  },
+  {
+    "amount": 3210,
+    "type": "Income",
+    "categoryName": "Bonus",
+    "description": "Performance bonus",
+    "date": "20-05-2025",
+    "currency": "BDT"
+  }
+]
