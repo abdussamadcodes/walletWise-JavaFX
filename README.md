@@ -285,6 +285,7 @@ They can be imported into WalletWise to quickly test the application.
 - **JDK 17 or later**
 - **Maven**
 - **Git**
+- **IntelliJ IDEA** (recommended)
 
 ### Clone the Repository
 
@@ -295,17 +296,36 @@ cd walletWise-JavaFX
 
 ### Open the Project
 
-Open the `walletWise` directory as a Maven project in IntelliJ IDEA or another Java IDE.
+Open the `walletWise-JavaFX` directory in **IntelliJ IDEA** as a Maven project.
 
-### Build
+### Load Maven Dependencies
 
-```bash
-mvn clean install
-```
+After opening the project:
 
-### Run
+1. Open the **Maven** panel in IntelliJ IDEA.
+2. Click **Reload All Maven Projects** to download and load the dependencies defined in `pom.xml`.
+3. Wait until Maven finishes importing the dependencies.
 
-Run the configured `Launcher` class from your IDE.
+### Run the Application
+
+There are two ways to run WalletWise.
+
+#### Option 1 — Run using Maven
+
+1. Open the **Maven** panel.
+2. Expand the project.
+3. Go to **Plugins → javafx**.
+4. Run the **`javafx:run`** goal.
+
+This starts the JavaFX application using the dependencies configured in `pom.xml`.
+
+#### Option 2 — Run the Launcher class
+
+1. Open the project's **`Launcher.java`** class.
+2. Click the **Run ▶** button next to the `main()` method or class.
+3. IntelliJ IDEA will launch the application.
+
+> **Note:** If the project has just been cloned, make sure Maven dependencies have been loaded successfully before running the application.
 
 ---
 

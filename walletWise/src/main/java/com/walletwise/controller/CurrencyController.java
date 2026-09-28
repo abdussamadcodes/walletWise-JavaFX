@@ -44,9 +44,7 @@ public class CurrencyController {
         CompletableFuture.runAsync(this::loadRatesWithFallback);
     }
 
-    // =========================================================
-    // THE 3-STEP FALLBACK LOGIC
-    // =========================================================
+
     private void loadRatesWithFallback() {
         try {
             // STEP 1: Check Internet First

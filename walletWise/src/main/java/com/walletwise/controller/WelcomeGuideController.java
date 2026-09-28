@@ -76,11 +76,10 @@ public class WelcomeGuideController {
             stage.setTitle("WalletWise - Personal Finance Manager");
             stage.setScene(new Scene(root, 950, 600));
 
-            // Apply lowest reasonable constraints for the main app
             stage.setMinWidth(800);
             stage.setMinHeight(500);
 
-            // Maximize automatically
+
             stage.setMaximized(true);
             stage.centerOnScreen();
         } catch (Exception e) {

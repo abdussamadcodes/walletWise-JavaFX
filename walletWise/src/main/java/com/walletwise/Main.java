@@ -27,7 +27,7 @@ public class Main extends Application {
             root = FXMLLoader.load(getClass().getResource("/fxml/WelcomeGuideLayout.fxml"));
             primaryStage.setTitle("Welcome to WalletWise");
 
-            // Compact start size for setup
+
             primaryStage.setScene(new Scene(root, 650, 550));
             primaryStage.setMinWidth(600);
             primaryStage.setMinHeight(500);
@@ -44,7 +44,7 @@ public class Main extends Application {
             primaryStage.setTitle("WalletWise - Personal Finance Manager");
             primaryStage.setScene(new Scene(root, 950, 600));
 
-            // Lowest responsive constraints for the main application
+
             primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(500);
             primaryStage.setMaximized(true);

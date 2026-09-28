@@ -23,7 +23,6 @@ public class MainController {
         showDashboard();
     }
 
-    // --- UPDATED METHOD TO SHOW EXACT ERRORS ---
     private void loadPage(String fxmlFileName) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFileName));

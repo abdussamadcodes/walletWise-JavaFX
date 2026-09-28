@@ -36,16 +36,13 @@ public class LoginController {
 
                 stage.setTitle("WalletWise - Personal Finance Manager");
 
-                // 1. SET SMALLER DEFAULT "RESTORE DOWN" SIZE
                 stage.setScene(new Scene(root, 950, 600));
 
                 stage.setResizable(true);
 
-                // 2. LOWER THE MINIMUM CONSTRAINTS
                 stage.setMinWidth(850);
                 stage.setMinHeight(550);
 
-                // 3. START MAXIMIZED
                 stage.setMaximized(true);
 
                 stage.centerOnScreen();

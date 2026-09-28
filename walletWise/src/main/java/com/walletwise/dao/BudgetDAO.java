@@ -9,7 +9,7 @@ public class BudgetDAO {
     private final String URL = "jdbc:sqlite:walletwise.db";
 
     public BudgetDAO() {
-        // FIX: Changed table name to 'budget_limits' to bypass the corrupted old table
+
         String sql = "CREATE TABLE IF NOT EXISTS budget_limits (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "category_name TEXT UNIQUE NOT NULL, " +

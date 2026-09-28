@@ -1,8 +1,5 @@
 package com.walletwise.model;
 
-/**
- * Advanced OOP: Inheritance.
- */
 public class Category extends BaseEntity {
     private String name;
     private String type; // "Income" or "Expense"
