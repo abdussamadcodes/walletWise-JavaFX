@@ -2,6 +2,7 @@ package com.walletwise.controller;
 
 import com.walletwise.dao.BudgetDAO;
 import com.walletwise.dao.CategoryDAO;
+import com.walletwise.dao.SettingsDAO;
 import com.walletwise.dao.TransactionDAO;
 import com.walletwise.model.Budget;
 import com.walletwise.model.Category;
@@ -18,11 +19,14 @@ import javafx.scene.layout.StackPane;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class BudgetController {
 
+    @FXML private Label titleLabel; // NEW: Dynamic title
     @FXML private ComboBox<String> categoryCombo;
     @FXML private TextField limitField;
     @FXML private Label messageLabel;
@@ -37,6 +41,7 @@ public class BudgetController {
     private final BudgetDAO budgetDAO = new BudgetDAO();
     private final CategoryDAO categoryDAO = new CategoryDAO();
     private final TransactionDAO transactionDAO = new TransactionDAO();
+    private final SettingsDAO settingsDAO = new SettingsDAO(); // NEW
 
     @FXML
     public void initialize() {
@@ -100,23 +105,74 @@ public class BudgetController {
         try {
             ObservableList<BudgetDTO> displayList = FXCollections.observableArrayList();
             List<Budget> budgets = budgetDAO.getAll();
-            LocalDate now = LocalDate.now();
 
-            List<Transaction> currentMonthTxs = transactionDAO.getAll().stream()
+            // --- NEW: FETCH GLOBAL DASHBOARD TIME FILTER ---
+            LocalDate today = LocalDate.now();
+            LocalDate start = today.with(TemporalAdjusters.firstDayOfMonth());
+            LocalDate end = today.with(TemporalAdjusters.lastDayOfMonth());
+
+            String filterType = settingsDAO.getSetting("dashboard_time_filter");
+            if (filterType == null) filterType = "This Month";
+
+            if ("Custom Date Range".equals(filterType)) {
+                String s = settingsDAO.getSetting("dashboard_start_date");
+                String e = settingsDAO.getSetting("dashboard_end_date");
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+                if (s != null && !s.isEmpty()) try { start = LocalDate.parse(s, df); } catch(Exception ignored){}
+                if (e != null && !e.isEmpty()) try { end = LocalDate.parse(e, df); } catch(Exception ignored){}
+
+                titleLabel.setText("Budget Planner (Custom Range)");
+            } else {
+                switch (filterType) {
+                    case "This Week":
+                        start = today.with(java.time.DayOfWeek.MONDAY);
+                        end = today.with(java.time.DayOfWeek.SUNDAY);
+                        break;
+                    case "This Month":
+                        start = today.with(TemporalAdjusters.firstDayOfMonth());
+                        end = today.with(TemporalAdjusters.lastDayOfMonth());
+                        break;
+                    case "Last Month":
+                        LocalDate lastMonth = today.minusMonths(1);
+                        start = lastMonth.with(TemporalAdjusters.firstDayOfMonth());
+                        end = lastMonth.with(TemporalAdjusters.lastDayOfMonth());
+                        break;
+                    case "This Year":
+                        start = today.with(TemporalAdjusters.firstDayOfYear());
+                        end = today.with(TemporalAdjusters.lastDayOfYear());
+                        break;
+                    case "All Time":
+                        start = null;
+                        end = null;
+                        break;
+                }
+                titleLabel.setText("Budget Planner (" + filterType + ")");
+            }
+
+            final LocalDate finalStart = start;
+            final LocalDate finalEnd = end;
+
+            // --- FILTER TRANSACTIONS DYNAMICALLY BY DASHBOARD DATES ---
+            List<Transaction> currentTxs = transactionDAO.getAll().stream()
                     .filter(t -> t.getType() != null && t.getType().equalsIgnoreCase("Expense"))
                     .filter(t -> {
                         LocalDate d = t.getDate();
-                        return d != null && d.getMonth() == now.getMonth() && d.getYear() == now.getYear();
+                        if (d == null) return false;
+                        if (finalStart != null && d.isBefore(finalStart)) return false;
+                        if (finalEnd != null && d.isAfter(finalEnd)) return false;
+                        return true;
                     })
                     .collect(Collectors.toList());
 
             for (Budget b : budgets) {
-                double spent = currentMonthTxs.stream()
+                double spent = currentTxs.stream()
                         .filter(t -> t.getCategoryName() != null && t.getCategoryName().equalsIgnoreCase(b.getCategoryName()))
                         .mapToDouble(Transaction::getAmount)
                         .sum();
                 displayList.add(new BudgetDTO(b.getCategoryName(), b.getLimitAmount(), spent));
             }
+
             budgetTable.setItems(displayList);
             budgetTable.refresh();
         } catch (Exception e) {
@@ -147,7 +203,7 @@ public class BudgetController {
             budgetDAO.saveOrUpdate(new Budget(category, limit));
             limitField.clear();
             showMessage("Budget saved!", true);
-            loadBudgetData();
+            loadBudgetData(); // Refresh calculations automatically
         } catch (NumberFormatException e) {
             showMessage("Invalid amount format.", false);
         } catch (SQLException e) {
@@ -161,7 +217,7 @@ public class BudgetController {
         if (selected != null) {
             try {
                 budgetDAO.delete(selected.getCategory());
-                loadBudgetData();
+                loadBudgetData(); // Refresh calculations automatically
                 showMessage("Budget removed.", true);
             } catch (SQLException e) {
                 showMessage("Database Error: " + e.getMessage(), false);

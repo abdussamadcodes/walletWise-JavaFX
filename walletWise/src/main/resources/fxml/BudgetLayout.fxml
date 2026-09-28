@@ -8,15 +8,15 @@
       xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.walletwise.controller.BudgetController">
 
-    <Label text="Monthly Budget Planner" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    <!-- NEW: Added fx:id="titleLabel" -->
+    <Label fx:id="titleLabel" text="Budget Planner" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
 
     <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 4);">
         <Label text="Category:" style="-fx-font-size: 14px;"/>
 
-        <!-- FIX: Added editable="true" -->
         <ComboBox fx:id="categoryCombo" editable="true" prefWidth="200" promptText="Select or type new..."/>
 
-        <Label text="Monthly Limit ($):" style="-fx-font-size: 14px;"/>
+        <Label text="Limit:" style="-fx-font-size: 14px;"/>
         <TextField fx:id="limitField" promptText="0.00" prefWidth="150"/>
 
         <Button text="Set Budget" onAction="#handleSetBudget"
@@ -33,7 +33,6 @@
             <TableColumn fx:id="limitCol" text="Limit" prefWidth="100" />
             <TableColumn fx:id="spentCol" text="Spent" prefWidth="100" />
             <TableColumn fx:id="remainingCol" text="Remaining" prefWidth="100" />
-            <!-- Expanded width slightly to fit the new percentage text -->
             <TableColumn fx:id="progressCol" text="Usage Progress" prefWidth="250" />
         </columns>
         <columnResizePolicy>

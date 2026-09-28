@@ -1,5 +1,6 @@
 package com.walletwise.controller;
 
+import com.walletwise.dao.SettingsDAO;
 import com.walletwise.dao.TransactionDAO;
 import com.walletwise.model.Transaction;
 import com.walletwise.util.CurrencyUtil;
@@ -48,6 +49,7 @@ public class DashboardController {
     @FXML private NumberAxis yAxis;
 
     private final TransactionDAO transactionDAO = new TransactionDAO();
+    private final SettingsDAO settingsDAO = new SettingsDAO(); // NEW
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private final DateTimeFormatter prettyFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
@@ -60,13 +62,26 @@ public class DashboardController {
                 "This Week", "This Month", "Last Month", "This Year", "All Time", "Custom Date Range"
         ));
 
+        // NEW: Load globally saved filter state
+        String savedStart = settingsDAO.getSetting("dashboard_start_date");
+        String savedEnd = settingsDAO.getSetting("dashboard_end_date");
+        if (savedStart != null && !savedStart.isEmpty()) startDatePicker.setValue(LocalDate.parse(savedStart, dateFormatter));
+        if (savedEnd != null && !savedEnd.isEmpty()) endDatePicker.setValue(LocalDate.parse(savedEnd, dateFormatter));
+
         timeFilterCombo.valueProperty().addListener((obs, oldV, newV) -> {
             if (newV != null) {
+                settingsDAO.saveSetting("dashboard_time_filter", newV); // Save choice globally
                 handleFilterChange(newV);
             }
         });
 
-        timeFilterCombo.setValue("This Month");
+        // Set Default or Restored View
+        String savedFilter = settingsDAO.getSetting("dashboard_time_filter");
+        if (savedFilter != null && timeFilterCombo.getItems().contains(savedFilter)) {
+            timeFilterCombo.setValue(savedFilter);
+        } else {
+            timeFilterCombo.setValue("This Month");
+        }
     }
 
     private void handleFilterChange(String filterType) {
@@ -115,9 +130,12 @@ public class DashboardController {
     private void handleApplyCustomDate() {
         LocalDate start = startDatePicker.getValue();
         LocalDate end = endDatePicker.getValue();
-        if (start != null || end != null) {
-            updateDashboardMetrics(start, end);
-        }
+
+        // NEW: Save custom dates globally
+        settingsDAO.saveSetting("dashboard_start_date", start != null ? dateFormatter.format(start) : "");
+        settingsDAO.saveSetting("dashboard_end_date", end != null ? dateFormatter.format(end) : "");
+
+        updateDashboardMetrics(start, end);
     }
 
     private void updateDashboardMetrics(LocalDate start, LocalDate end) {
